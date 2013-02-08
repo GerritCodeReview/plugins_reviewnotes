@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "Ps88YnYA",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ReviewNotesModule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-02-08T02:38:45Z",
+      "side": 1,
+      "message": "Please make this module public. I can\u0027t run plugins in my server, but I can statically link my server include specific Guice modules. If we make this one class public I can wedge in the entire refs/notes/review system and have it work as before. :-)",
+      "revId": "ed0f44ebe90092564ba69fbfc020c7e97096d6cf",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
