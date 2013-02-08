@@ -16,6 +16,24 @@
       "revId": "ed0f44ebe90092564ba69fbfc020c7e97096d6cf",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "PtszvT0M",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ReviewNotesModule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2013-02-08T11:48:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "Ps88YnYA",
+      "revId": "ed0f44ebe90092564ba69fbfc020c7e97096d6cf",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
