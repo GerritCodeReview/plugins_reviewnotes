@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "SKdlZ0zs",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/RefUpdateListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2013-03-21T03:11:54Z",
+      "side": 1,
+      "message": "This fails in Guice setup:\n\n Caused by: com.google.inject.CreationException: Guice creation errors:\n\n 1) No implementation for com.google.gerrit.server.util.RequestScopePropagator was bound.\n   while locating com.google.gerrit.server.util.RequestScopePropagator\n     for parameter 4 at com.googlesource.gerrit.plugins.reviewnotes.RefUpdateListener.\u003cinit\u003e(RefUpdateListener.java:56)\n   at com.google.gerrit.extensions.registration.DynamicSet.bind(DynamicSet.java:97)\n \n 1 error\n \tat com.google.inject.internal.Errors.throwCreationExceptionIfErrorsExist(Errors.java:464)",
+      "revId": "8a6828314bb6182444b74648e20a5496fe44351b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
