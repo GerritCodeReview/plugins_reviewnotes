@@ -15,6 +15,7 @@
 package com.googlesource.gerrit.plugins.reviewnotes;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -51,6 +52,8 @@ import com.google.gerrit.server.config.CanonicalWebUrl;
 import com.google.gerrit.server.git.LabelNormalizer;
 import com.google.gerrit.server.git.NotesBranchUtil;
 import com.google.gerrit.server.project.NoSuchChangeException;
+import com.google.gerrit.server.project.ProjectCache;
+import com.google.gerrit.server.project.ProjectState;
 import com.google.gwtorm.server.OrmException;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -86,7 +89,7 @@ class CreateReviewNotes {
   CreateReviewNotes(@GerritPersonIdent final PersonIdent gerritIdent,
       final AccountCache accountCache,
       final @AnonymousCowardName String anonymousCowardName,
-      final LabelTypes labelTypes,
+      final ProjectCache projectCache,
       final LabelNormalizer labelNormalizer,
       final NotesBranchUtil.Factory notesBranchUtilFactory,
       final @Nullable @CanonicalWebUrl String canonicalWebUrl,
@@ -96,7 +99,14 @@ class CreateReviewNotes {
     this.gerritServerIdent = gerritIdent;
     this.accountCache = accountCache;
     this.anonymousCowardName = anonymousCowardName;
-    this.labelTypes = labelTypes;
+    ProjectState projectState = projectCache.get(project);
+    if (projectState == null) {
+      log.error("Could not obtain available labels for project "
+          + project.get() + ". Expect missing labels its review notes.");
+      this.labelTypes = new LabelTypes(Collections.<LabelType> emptyList());
+    } else {
+      this.labelTypes = projectState.getLabelTypes();
+    }
     this.labelNormalizer = labelNormalizer;
     this.notesBranchUtilFactory = notesBranchUtilFactory;
     this.canonicalWebUrl = canonicalWebUrl;
