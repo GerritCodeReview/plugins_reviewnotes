@@ -52,6 +52,24 @@
       "revId": "70092ec7a04bbce68dc7b5c73aefe3af526362f8",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "SmOrsR04",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1012155
+      },
+      "writtenOn": "2013-03-25T21:13:57Z",
+      "side": 0,
+      "message": "Full ACK.\n\nNote, however, that LabelTypes is in \"good\" company: ChangeInfo,\nGroupInfo, ... all come with a protected no-arg constructors. So Guice\nwould happily inject uninitialized variants of them as well.\n\nThe GWT requirement for the non-private constructor comes from the\ndeserializing part of generated serializers. So for example\nLabelTypes_JsonSerializer contains a line\n\n  final com.google.gerrit.common.data.LabelTypes dst \u003d new com.google.gerrit.common.data.LabelTypes();\n\nin the fromJson method to generate an instance to inject deserialized\nvalues into.\n\nSo while decreasing visibility to package visibility obviously also\nsuffices for GWT, Guice would nonetheless use the constructors, as\nthey are not private.\n\nI fully agree that it\u0027s probably not worth investing time to come up\nwith a more bullet-proof approach that can do without those\nconstructors.",
+      "parentUuid": "Si5cSpF4",
+      "revId": "70092ec7a04bbce68dc7b5c73aefe3af526362f8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
