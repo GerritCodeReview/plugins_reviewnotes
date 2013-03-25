@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "Si5f7xAA",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2013-03-25T14:04:26Z",
+      "side": 0,
+      "message": "I\u0027m more than a little surprised this didn\u0027t result in an error during injection. I\u0027ll look into why not.",
+      "revId": "70092ec7a04bbce68dc7b5c73aefe3af526362f8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
