@@ -34,6 +34,24 @@
       "revId": "463a0dfc37e212953b803946b454023ae0c1772b",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "Si7cNqEQ",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2013-03-25T18:26:16Z",
+      "side": 1,
+      "message": "Sounds good to me.",
+      "parentUuid": "SiHooGZU",
+      "revId": "463a0dfc37e212953b803946b454023ae0c1772b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
