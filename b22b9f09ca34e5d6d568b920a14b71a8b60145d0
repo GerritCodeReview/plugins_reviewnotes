@@ -16,6 +16,24 @@
       "revId": "b22b9f09ca34e5d6d568b920a14b71a8b60145d0",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "SmKr2TxY",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1012155
+      },
+      "writtenOn": "2013-03-25T21:15:57Z",
+      "side": 1,
+      "message": "It seems I just cannot write even a single correct English sentence.\nNo matter how often I proof-read it :-(\n\nDone.",
+      "parentUuid": "SjJYSrF4",
+      "revId": "b22b9f09ca34e5d6d568b920a14b71a8b60145d0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
