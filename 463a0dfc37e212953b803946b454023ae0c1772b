@@ -16,6 +16,24 @@
       "revId": "463a0dfc37e212953b803946b454023ae0c1772b",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "SiHooGZU",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1012155
+      },
+      "writtenOn": "2013-03-25T18:17:59Z",
+      "side": 1,
+      "message": "I figured that in that unlikely case, I\u0027d prefer missing Labels in the reviewnotes and still have \u0027Submitted-By\u0027 and \u0027Submitted-at\u0027 in there -- instead of having the plugin not even trying to add any notes.\n\nWhat about logging the error but still carrying on?",
+      "parentUuid": "SjNbxRCI",
+      "revId": "463a0dfc37e212953b803946b454023ae0c1772b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

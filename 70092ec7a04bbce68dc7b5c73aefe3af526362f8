@@ -16,6 +16,24 @@
       "revId": "70092ec7a04bbce68dc7b5c73aefe3af526362f8",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "SiJoSzV4",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1012155
+      },
+      "writtenOn": "2013-03-25T18:17:59Z",
+      "side": 0,
+      "message": "LabelTypes has a parameterless protected constructor.\n\nGuice correctly :-( picks that constructor to generate the injected instance.\n\nAlthough that constructor looks unused, it is nevertheless required by GWT in the generated file\n\n gerrit-gwtui/target/.generated/com/google/gerrit/common/data/LabelTypes_JsonSerializer.java\n\n. So we cannot simply remove that constructor.\n\nThis leaves us with an unwanted (and uninitialized) injection for LabelTypes. But I guess this is only an issue for legacy code.\n\nAs I5135b3f47e71d04c9231cd078e4058dbb43c7e86 has been merged already, gerrit should be clean of injecting LabelTypes.",
+      "parentUuid": "Si5f7xAA",
+      "revId": "70092ec7a04bbce68dc7b5c73aefe3af526362f8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
