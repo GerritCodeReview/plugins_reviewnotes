@@ -136,7 +136,7 @@ class CreateReviewNotes {
 
     try {
       for (RevCommit c : rw) {
-        ObjectId content = createNoteContent(c);
+        ObjectId content = createNoteContent(null, c);
         if (content != null) {
           monitor.update(1);
           getNotes().set(c, content);
@@ -157,11 +157,11 @@ class CreateReviewNotes {
       }
 
       NoteMap notes = NoteMap.newEmptyMap();
-      for (Change c : changes) {
+      for (Change change : changes) {
         monitor.update(1);
-        PatchSet ps = reviewDb.patchSets().get(c.currentPatchSetId());
+        PatchSet ps = reviewDb.patchSets().get(change.currentPatchSetId());
         ObjectId commitId = ObjectId.fromString(ps.getRevision().get());
-        notes.set(commitId, createNoteContent(rw.parseCommit(commitId)));
+        notes.set(commitId, createNoteContent(change, rw.parseCommit(commitId)));
       }
     } finally {
       rw.release();
@@ -209,7 +209,7 @@ class CreateReviewNotes {
     }
   }
 
-  private ObjectId createNoteContent(RevCommit c)
+  private ObjectId createNoteContent(Change change, RevCommit c)
       throws OrmException, IOException {
     List<PatchSet> patches = reviewDb.patchSets().byRevision(new RevId(c.name()))
         .toList();
@@ -217,18 +217,27 @@ class CreateReviewNotes {
         new HeaderFormatter(gerritServerIdent.getTimeZone(), anonymousCowardName);
     if (patches.isEmpty()) {
       return null; // TODO: createNoCodeReviewNote(branch, c, fmt);
-    } else if (patches.size() == 1) {
-      try {
-        createCodeReviewNote(patches.get(0), fmt);
-      } catch (NoSuchChangeException e) {
-        throw new IOException(e);
-      }
+    } else if ((patches.size() >  1) && (change == null)) {
+        log.error("Cannot create review note:"
+            + " more than one patch set found for the commit " + c.name()
+            + " and we don't know which change it belongs to.");
+         return null;
     } else {
-      log.error("Cannot create review note:"
-          + " more than one patch set found for the commit " + c.name());
-      return null;
+      // We found multiple commits with the same revision.
+      // Make sure we only add the review note for the one that belongs
+      // to the change we're interested in.
+      for (PatchSet patch: patches) {
+        if (patch.getId().getParentKey() == change.getId()) {
+          try {
+            createCodeReviewNote(patches.get(0), fmt);
+            return getInserter().insert(Constants.OBJ_BLOB, fmt.toString().getBytes("UTF-8"));
+          } catch (NoSuchChangeException e) {
+            throw new IOException(e);
+          }
+        }
+      }
     }
-    return getInserter().insert(Constants.OBJ_BLOB, fmt.toString().getBytes("UTF-8"));
+    return null;
   }
 
   private void createCodeReviewNote(PatchSet ps, HeaderFormatter fmt)
