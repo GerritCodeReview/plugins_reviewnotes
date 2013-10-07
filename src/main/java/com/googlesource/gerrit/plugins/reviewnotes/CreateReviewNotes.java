@@ -211,24 +211,37 @@ class CreateReviewNotes {
 
   private ObjectId createNoteContent(RevCommit c)
       throws OrmException, IOException {
-    List<PatchSet> patches = reviewDb.patchSets().byRevision(new RevId(c.name()))
-        .toList();
     HeaderFormatter fmt =
         new HeaderFormatter(gerritServerIdent.getTimeZone(), anonymousCowardName);
-    if (patches.isEmpty()) {
-      return null; // TODO: createNoCodeReviewNote(branch, c, fmt);
-    } else if (patches.size() == 1) {
+    PatchSet ps = loadPatchSet(c);
+    if (ps != null) {
       try {
-        createCodeReviewNote(patches.get(0), fmt);
+        createCodeReviewNote(ps, fmt);
+        return getInserter().insert(Constants.OBJ_BLOB,
+            fmt.toString().getBytes("UTF-8"));
       } catch (NoSuchChangeException e) {
         throw new IOException(e);
       }
-    } else {
-      log.error("Cannot create review note:"
-          + " more than one patch set found for the commit " + c.name());
-      return null;
     }
-    return getInserter().insert(Constants.OBJ_BLOB, fmt.toString().getBytes("UTF-8"));
+    return null;
+  }
+
+  private PatchSet loadPatchSet(RevCommit c) throws OrmException {
+    List<PatchSet> patches = reviewDb.patchSets().byRevision(new RevId(c.name()))
+        .toList();
+    if (patches.isEmpty()) {
+      return null; // TODO: createNoCodeReviewNote(branch, c, fmt);
+    } else if (patches.size() == 1) {
+      return patches.get(0);
+    } else {
+      for (PatchSet ps : patches) {
+        Change.Id cid = ps.getId().getParentKey();
+        if (reviewDb.changes().get(cid).getProject().equals(project)) {
+          return ps;
+        }
+      }
+    }
+    return null;
   }
 
   private void createCodeReviewNote(PatchSet ps, HeaderFormatter fmt)
