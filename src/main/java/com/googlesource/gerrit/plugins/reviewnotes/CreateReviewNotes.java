@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gerrit.common.Nullable;
 import com.google.gerrit.common.data.LabelType;
 import com.google.gerrit.common.data.LabelTypes;
+import com.google.gerrit.reviewdb.client.Branch;
 import com.google.gerrit.reviewdb.client.Change;
 import com.google.gerrit.reviewdb.client.PatchSet;
 import com.google.gerrit.reviewdb.client.PatchSetApproval;
@@ -122,8 +123,13 @@ class CreateReviewNotes {
 
     RevWalk rw = new RevWalk(git);
     try {
-      rw.markStart(rw.parseCommit(newObjectId));
-      markUninteresting(git, branch, rw, oldObjectId);
+      RevCommit n = rw.parseCommit(newObjectId);
+      rw.markStart(n);
+      if (n.getParentCount() == 1 && n.getParent(0).equals(oldObjectId)) {
+        rw.markUninteresting(rw.parseCommit(oldObjectId));
+      } else {
+        markUninteresting(git, branch, rw, oldObjectId);
+      }
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       return;
@@ -135,7 +141,7 @@ class CreateReviewNotes {
 
     try {
       for (RevCommit c : rw) {
-        ObjectId content = createNoteContent(c);
+        ObjectId content = createNoteContent(loadPatchSet(c, branch));
         if (content != null) {
           monitor.update(1);
           getNotes().set(c, content);
@@ -225,12 +231,8 @@ class CreateReviewNotes {
     return null;
   }
 
-  private ObjectId createNoteContent(RevCommit c)
-      throws OrmException, IOException {
-    return createNoteContent(loadPatchSet(c));
-  }
-
-  private PatchSet loadPatchSet(RevCommit c) throws OrmException {
+  private PatchSet loadPatchSet(RevCommit c, String destBranch)
+      throws OrmException {
     List<PatchSet> patches = reviewDb.patchSets().byRevision(new RevId(c.name()))
         .toList();
     if (patches.isEmpty()) {
@@ -238,9 +240,11 @@ class CreateReviewNotes {
     } else if (patches.size() == 1) {
       return patches.get(0);
     } else {
+      Branch.NameKey dest = new Branch.NameKey(project, destBranch);
       for (PatchSet ps : patches) {
         Change.Id cid = ps.getId().getParentKey();
-        if (reviewDb.changes().get(cid).getProject().equals(project)) {
+        Change change = reviewDb.changes().get(cid);
+        if (change.getDest().equals(dest)) {
           return ps;
         }
       }
