@@ -160,7 +160,7 @@ class CreateReviewNotes {
         PatchSet ps = reviewDb.patchSets().get(c.currentPatchSetId());
         ObjectId commitId = ObjectId.fromString(ps.getRevision().get());
         RevCommit commit = rw.parseCommit(commitId);
-        getNotes().set(commitId, createNoteContent(commit));
+        getNotes().set(commitId, createNoteContent(ps));
         getMessage().append("* ").append(commit.getShortMessage()).append("\n");
       }
     } finally {
@@ -209,11 +209,10 @@ class CreateReviewNotes {
     }
   }
 
-  private ObjectId createNoteContent(RevCommit c)
+  private ObjectId createNoteContent(PatchSet ps)
       throws OrmException, IOException {
     HeaderFormatter fmt =
         new HeaderFormatter(gerritServerIdent.getTimeZone(), anonymousCowardName);
-    PatchSet ps = loadPatchSet(c);
     if (ps != null) {
       try {
         createCodeReviewNote(ps, fmt);
@@ -224,6 +223,11 @@ class CreateReviewNotes {
       }
     }
     return null;
+  }
+
+  private ObjectId createNoteContent(RevCommit c)
+      throws OrmException, IOException {
+    return createNoteContent(loadPatchSet(c));
   }
 
   private PatchSet loadPatchSet(RevCommit c) throws OrmException {
