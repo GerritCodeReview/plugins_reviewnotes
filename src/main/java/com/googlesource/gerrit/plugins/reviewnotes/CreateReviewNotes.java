@@ -14,9 +14,29 @@
 
 package com.googlesource.gerrit.plugins.reviewnotes;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
+import com.google.gerrit.common.Nullable;
+import com.google.gerrit.common.data.LabelType;
+import com.google.gerrit.common.data.LabelTypes;
+import com.google.gerrit.reviewdb.client.Branch;
+import com.google.gerrit.reviewdb.client.Change;
+import com.google.gerrit.reviewdb.client.PatchSet;
+import com.google.gerrit.reviewdb.client.PatchSetApproval;
+import com.google.gerrit.reviewdb.client.Project;
+import com.google.gerrit.reviewdb.client.RevId;
+import com.google.gerrit.reviewdb.server.ReviewDb;
+import com.google.gerrit.server.ApprovalsUtil;
+import com.google.gerrit.server.GerritPersonIdent;
+import com.google.gerrit.server.account.AccountCache;
+import com.google.gerrit.server.config.AnonymousCowardName;
+import com.google.gerrit.server.config.CanonicalWebUrl;
+import com.google.gerrit.server.git.LabelNormalizer;
+import com.google.gerrit.server.git.NotesBranchUtil;
+import com.google.gerrit.server.project.NoSuchChangeException;
+import com.google.gerrit.server.project.ProjectCache;
+import com.google.gerrit.server.project.ProjectState;
+import com.google.gwtorm.server.OrmException;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
@@ -35,28 +55,9 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gerrit.common.Nullable;
-import com.google.gerrit.common.data.LabelType;
-import com.google.gerrit.common.data.LabelTypes;
-import com.google.gerrit.reviewdb.client.Branch;
-import com.google.gerrit.reviewdb.client.Change;
-import com.google.gerrit.reviewdb.client.PatchSet;
-import com.google.gerrit.reviewdb.client.PatchSetApproval;
-import com.google.gerrit.reviewdb.client.Project;
-import com.google.gerrit.reviewdb.client.RevId;
-import com.google.gerrit.reviewdb.server.ReviewDb;
-import com.google.gerrit.server.GerritPersonIdent;
-import com.google.gerrit.server.account.AccountCache;
-import com.google.gerrit.server.config.AnonymousCowardName;
-import com.google.gerrit.server.config.CanonicalWebUrl;
-import com.google.gerrit.server.git.LabelNormalizer;
-import com.google.gerrit.server.git.NotesBranchUtil;
-import com.google.gerrit.server.project.NoSuchChangeException;
-import com.google.gerrit.server.project.ProjectCache;
-import com.google.gerrit.server.project.ProjectState;
-import com.google.gwtorm.server.OrmException;
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 class CreateReviewNotes {
 
@@ -74,6 +75,7 @@ class CreateReviewNotes {
   private final AccountCache accountCache;
   private final String anonymousCowardName;
   private final LabelTypes labelTypes;
+  private final ApprovalsUtil approvalsUtil;
   private final LabelNormalizer labelNormalizer;
   private final NotesBranchUtil.Factory notesBranchUtilFactory;
   private final String canonicalWebUrl;
@@ -90,6 +92,7 @@ class CreateReviewNotes {
       final AccountCache accountCache,
       final @AnonymousCowardName String anonymousCowardName,
       final ProjectCache projectCache,
+      final ApprovalsUtil approvalsUtil,
       final LabelNormalizer labelNormalizer,
       final NotesBranchUtil.Factory notesBranchUtilFactory,
       final @Nullable @CanonicalWebUrl String canonicalWebUrl,
@@ -107,6 +110,7 @@ class CreateReviewNotes {
     } else {
       this.labelTypes = projectState.getLabelTypes();
     }
+    this.approvalsUtil = approvalsUtil;
     this.labelNormalizer = labelNormalizer;
     this.notesBranchUtilFactory = notesBranchUtilFactory;
     this.canonicalWebUrl = canonicalWebUrl;
@@ -264,7 +268,7 @@ class CreateReviewNotes {
     // repeat some work, but results should be identical except in the case of
     // an additional race with a permissions change.
     List<PatchSetApproval> approvals = labelNormalizer.normalize(
-        change, reviewDb.patchSetApprovals().byPatchSet(ps.getId()).toList());
+        change, approvalsUtil.byPatchSet(reviewDb, ps.getId()));
     PatchSetApproval submit = null;
     for (PatchSetApproval a : approvals) {
       if (a.getValue() == 0) {
