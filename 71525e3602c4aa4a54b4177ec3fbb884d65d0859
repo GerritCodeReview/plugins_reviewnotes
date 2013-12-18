@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "488a3f9e_9fdc5388",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2013-12-18T21:21:14Z",
+      "side": 1,
+      "message": "[optional]: I guess the imports were sorted by the \"organize imports\" in Eclipse... but this makes the delta larger than necessary. The only necessary change here was the import of the ApprovalsUtil.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 0
+      },
+      "revId": "71525e3602c4aa4a54b4177ec3fbb884d65d0859",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
