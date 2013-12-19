@@ -46,6 +46,30 @@
       "revId": "71525e3602c4aa4a54b4177ec3fbb884d65d0859",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "685383fd_f0ebc020",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-12-19T06:22:12Z",
+      "side": 1,
+      "message": "Done in [1]\n\n[1] https://gerrit-review.googlesource.com/53320",
+      "parentUuid": "e815b3f4_d4eb3c21",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 0
+      },
+      "revId": "71525e3602c4aa4a54b4177ec3fbb884d65d0859",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
