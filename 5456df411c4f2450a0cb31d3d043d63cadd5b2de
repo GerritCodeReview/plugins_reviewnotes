@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9358f970_da1da581",
+        "filename": ".buckconfig",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-08-21T19:24:45Z",
+      "side": 1,
+      "message": "reviewnotes?",
+      "range": {
+        "startLine": 2,
+        "startChar": 2,
+        "endLine": 2,
+        "endChar": 11
+      },
+      "revId": "5456df411c4f2450a0cb31d3d043d63cadd5b2de",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f33f75e6_7d2d77b2",
+        "filename": "lib/gerrit/BUCK",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2014-08-21T19:24:45Z",
+      "side": 1,
+      "message": "2.11-SNAPSHOT or 2.10?",
+      "range": {
+        "startLine": 3,
+        "startChar": 7,
+        "endLine": 3,
+        "endChar": 20
+      },
+      "revId": "5456df411c4f2450a0cb31d3d043d63cadd5b2de",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
