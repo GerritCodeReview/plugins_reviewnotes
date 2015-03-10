@@ -157,14 +157,13 @@ class CreateReviewNotes {
         }
       }
     } finally {
-      rw.release();
+      rw.close();
     }
   }
 
   void createNotes(List<Change> changes, ProgressMonitor monitor)
       throws OrmException, IOException {
-    RevWalk rw = new RevWalk(git);
-    try {
+    try (RevWalk rw = new RevWalk(git)) {
       if (monitor == null) {
         monitor = NullProgressMonitor.INSTANCE;
       }
@@ -177,8 +176,6 @@ class CreateReviewNotes {
         getNotes().set(commitId, createNoteContent(ps));
         getMessage().append("* ").append(commit.getShortMessage()).append("\n");
       }
-    } finally {
-      rw.release();
     }
   }
 
@@ -194,7 +191,7 @@ class CreateReviewNotes {
               message.toString());
     } finally {
       if (inserter != null) {
-        inserter.release();
+        inserter.close();
       }
     }
   }
