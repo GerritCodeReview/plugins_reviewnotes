@@ -129,25 +129,24 @@ class CreateReviewNotes {
       return;
     }
 
-    RevWalk rw = new RevWalk(git);
-    try {
-      RevCommit n = rw.parseCommit(newObjectId);
-      rw.markStart(n);
-      if (n.getParentCount() == 1 && n.getParent(0).equals(oldObjectId)) {
-        rw.markUninteresting(rw.parseCommit(oldObjectId));
-      } else {
-        markUninteresting(git, branch, rw, oldObjectId);
+    try (RevWalk rw = new RevWalk(git)) {
+      try {
+        RevCommit n = rw.parseCommit(newObjectId);
+        rw.markStart(n);
+        if (n.getParentCount() == 1 && n.getParent(0).equals(oldObjectId)) {
+          rw.markUninteresting(rw.parseCommit(oldObjectId));
+        } else {
+          markUninteresting(git, branch, rw, oldObjectId);
+        }
+      } catch (Exception e) {
+        log.error(e.getMessage(), e);
+        return;
       }
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-      return;
-    }
 
-    if (monitor == null) {
-      monitor = NullProgressMonitor.INSTANCE;
-    }
+      if (monitor == null) {
+        monitor = NullProgressMonitor.INSTANCE;
+      }
 
-    try {
       for (RevCommit c : rw) {
         ObjectId content = createNoteContent(loadPatchSet(c, branch));
         if (content != null) {
@@ -156,8 +155,6 @@ class CreateReviewNotes {
           getMessage().append("* ").append(c.getShortMessage()).append("\n");
         }
       }
-    } finally {
-      rw.close();
     }
   }
 
