@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "edd32994_875986e3",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2015-05-27T13:25:31Z",
+      "side": 1,
+      "message": "For stable-2.10 I would suggest to limit modifications to a simple replacement of .release() calls to .close() calls.",
+      "revId": "79c0e43b60998be781d0b73fde5b87107942ddeb",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
