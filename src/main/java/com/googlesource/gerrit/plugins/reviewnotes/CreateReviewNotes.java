@@ -157,7 +157,7 @@ class CreateReviewNotes {
         }
       }
     } finally {
-      rw.release();
+      rw.close();
     }
   }
 
@@ -178,7 +178,7 @@ class CreateReviewNotes {
         getMessage().append("* ").append(commit.getShortMessage()).append("\n");
       }
     } finally {
-      rw.release();
+      rw.close();
     }
   }
 
@@ -194,7 +194,7 @@ class CreateReviewNotes {
               message.toString());
     } finally {
       if (inserter != null) {
-        inserter.release();
+        inserter.close();
       }
     }
   }
