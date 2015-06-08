@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9bdb0e6_37d5182e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2015-06-08T00:12:36Z",
+      "side": 1,
+      "message": "This is now out of date. Is it worth the extra patch set on the corresponding gerrit change (and have to wait for the Library-Compliance label again) just to fix this?",
+      "range": {
+        "startLine": 7,
+        "startChar": 13,
+        "endLine": 7,
+        "endChar": 42
+      },
+      "revId": "41efbd98801fa4d11d522e2113324df4ff5e1b2b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
