@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "04d4e17b_47266e6b",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2015-08-27T08:34:28Z",
+      "side": 1,
+      "message": "The comment was on the wrong line.  The indentation of lines 108 and 109 is wrong.",
+      "parentUuid": "245f25fb_d8d26d45",
+      "revId": "092e54052c01b93e392d373340ab2db819293404",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4c569ce_654ba67f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
         "patchSetId": 2
