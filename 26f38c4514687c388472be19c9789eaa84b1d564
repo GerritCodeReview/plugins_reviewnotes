@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24d1e58c_0803e7c9",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2015-08-27T08:35:14Z",
+      "side": 1,
+      "message": "Gah, and now I\u0027ve wrongly indented this line.",
+      "revId": "26f38c4514687c388472be19c9789eaa84b1d564",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
