@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4c569ce_e536760c",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2015-08-27T07:54:23Z",
+      "side": 1,
+      "message": "this \"return\" is not necessary any more",
+      "revId": "57e688d26cfbfbe6695b7f8ae2a3079e8e5fa5dc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4c569ce_85418266",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/RefUpdateListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2015-08-27T07:54:23Z",
+      "side": 1,
+      "message": "This \"return\" is not necessary now",
+      "revId": "57e688d26cfbfbe6695b7f8ae2a3079e8e5fa5dc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
