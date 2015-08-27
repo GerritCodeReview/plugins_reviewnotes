@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "245f25fb_d8d26d45",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2015-08-27T08:32:51Z",
+      "side": 1,
+      "message": "Why is it wrong? In Gerrit\u0027s code base we have examples of both 2 and 4 spaces indentation for this case.",
+      "parentUuid": "04d4e17b_272ffa41",
+      "revId": "092e54052c01b93e392d373340ab2db819293404",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4c569ce_654ba67f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
         "patchSetId": 2
