@@ -76,17 +76,11 @@ public class ExportReviewNotes extends SshCommand {
   }
 
   private List<Change> allChanges() {
-    ReviewDb db = null;
-    try {
-      db = database.open();
+    try (ReviewDb db = database.open()){
       return db.changes().all().toList();
     } catch (OrmException e) {
       stderr.println("Cannot read changes from database " + e.getMessage());
       return Collections.emptyList();
-    } finally {
-      if (db != null) {
-        db.close();
-      }
     }
   }
 
@@ -157,14 +151,7 @@ public class ExportReviewNotes extends SshCommand {
   private class Worker extends Thread {
     @Override
     public void run() {
-      ReviewDb db;
-      try {
-        db = database.open();
-      } catch (OrmException e) {
-        stderr.println(e.getMessage());
-        return;
-      }
-      try {
+      try (ReviewDb db = database.open()){
         for (;;) {
           Entry<Project.NameKey, List<Change>> next = next();
           if (next != null) {
@@ -177,9 +164,11 @@ public class ExportReviewNotes extends SshCommand {
             break;
           }
         }
+      } catch (OrmException e) {
+        stderr.println(e.getMessage());
+        return;
       } finally {
         monitor.endWorker();
-        db.close();
       }
     }
   }
