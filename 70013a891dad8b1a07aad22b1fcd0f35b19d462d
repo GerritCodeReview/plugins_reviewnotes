@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "24d1e58c_a811fb14",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2015-08-27T08:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c4c569ce_c53b7af2",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 7
+      },
+      "revId": "70013a891dad8b1a07aad22b1fcd0f35b19d462d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4c569ce_054e328f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2015-08-27T07:59:11Z",
       "side": 1,
       "message": "remove this return",
+      "revId": "70013a891dad8b1a07aad22b1fcd0f35b19d462d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04d4e17b_a73aca80",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2015-08-27T08:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c4c569ce_054e328f",
       "revId": "70013a891dad8b1a07aad22b1fcd0f35b19d462d",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "04d4e17b_873fc670",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/RefUpdateListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2015-08-27T08:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "245f25fb_18c4e587",
+      "range": {
+        "startLine": 97,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 46
+      },
+      "revId": "70013a891dad8b1a07aad22b1fcd0f35b19d462d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "245f25fb_58ce5da7",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/RefUpdateListener.java",
         "patchSetId": 1
@@ -76,6 +142,24 @@
       "writtenOn": "2015-08-27T07:59:11Z",
       "side": 1,
       "message": "the return is not necessary",
+      "revId": "70013a891dad8b1a07aad22b1fcd0f35b19d462d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04d4e17b_e734c296",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/RefUpdateListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2015-08-27T08:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "245f25fb_58ce5da7",
       "revId": "70013a891dad8b1a07aad22b1fcd0f35b19d462d",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "24d1e58c_8816b708",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/RefUpdateListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2015-08-27T08:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "245f25fb_38c1a978",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 7
+      },
+      "revId": "70013a891dad8b1a07aad22b1fcd0f35b19d462d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4c569ce_2551ae2f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/RefUpdateListener.java",
         "patchSetId": 1
@@ -116,6 +224,24 @@
       "writtenOn": "2015-08-27T07:59:11Z",
       "side": 1,
       "message": "remove this return too",
+      "revId": "70013a891dad8b1a07aad22b1fcd0f35b19d462d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24d1e58c_e81bf32e",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/RefUpdateListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2015-08-27T08:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c4c569ce_2551ae2f",
       "revId": "70013a891dad8b1a07aad22b1fcd0f35b19d462d",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
