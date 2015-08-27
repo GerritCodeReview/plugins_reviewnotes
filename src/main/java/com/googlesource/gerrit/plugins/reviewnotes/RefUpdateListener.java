@@ -26,7 +26,6 @@ import com.google.gwtorm.server.SchemaFactory;
 import com.google.inject.Inject;
 
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
-import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
@@ -95,33 +94,24 @@ class RefUpdateListener implements GitReferenceUpdatedListener {
 
   private void createReviewNotes(Event e) {
     Project.NameKey projectName = new Project.NameKey(e.getProjectName());
-    Repository git;
-    try {
-      git = repoManager.openRepository(projectName);
-    } catch (RepositoryNotFoundException x) {
-      log.error(x.getMessage(), x);
-      return;
+    try (Repository git = repoManager.openRepository(projectName)){
+      try (ReviewDb reviewDb = schema.open()){
+        CreateReviewNotes crn = reviewNotesFactory.create(
+            reviewDb, projectName, git);
+        if (e.getRefName().startsWith("refs/heads/")) {
+          crn.createNotes(e.getRefName(),
+              ObjectId.fromString(e.getOldObjectId()),
+              ObjectId.fromString(e.getNewObjectId()),
+              null);
+          crn.commitNotes();
+        }
+      } catch (OrmException | IOException | ConcurrentRefUpdateException x) {
+        log.error(x.getMessage(), x);
+        return;
+      }
     } catch (IOException x) {
       log.error(x.getMessage(), x);
       return;
-    }
-
-
-    try (ReviewDb reviewDb = schema.open()){
-      CreateReviewNotes crn = reviewNotesFactory.create(
-          reviewDb, projectName, git);
-      if (e.getRefName().startsWith("refs/heads/")) {
-        crn.createNotes(e.getRefName(),
-            ObjectId.fromString(e.getOldObjectId()),
-            ObjectId.fromString(e.getNewObjectId()),
-            null);
-        crn.commitNotes();
-      }
-    } catch (OrmException | IOException | ConcurrentRefUpdateException x) {
-      log.error(x.getMessage(), x);
-      return;
-    } finally {
-      git.close();
     }
   }
 }
