@@ -106,39 +106,22 @@ class RefUpdateListener implements GitReferenceUpdatedListener {
       return;
     }
 
-    ReviewDb reviewDb;
-    try {
 
-      try {
-        reviewDb = schema.open();
-      } catch (OrmException x) {
-        log.error(x.getMessage(), x);
-        return;
+    try (ReviewDb reviewDb = schema.open()){
+      CreateReviewNotes crn = reviewNotesFactory.create(
+          reviewDb, projectName, git);
+      if (e.getRefName().startsWith("refs/heads/")) {
+        crn.createNotes(e.getRefName(),
+            ObjectId.fromString(e.getOldObjectId()),
+            ObjectId.fromString(e.getNewObjectId()),
+            null);
+        crn.commitNotes();
       }
-
-      try {
-        CreateReviewNotes crn = reviewNotesFactory.create(
-            reviewDb, projectName, git);
-        if (e.getRefName().startsWith("refs/heads/")) {
-          crn.createNotes(e.getRefName(),
-              ObjectId.fromString(e.getOldObjectId()),
-              ObjectId.fromString(e.getNewObjectId()),
-              null);
-          crn.commitNotes();
-        }
-      } catch (OrmException x) {
-        log.error(x.getMessage(), x);
-      } catch (IOException x) {
-        log.error(x.getMessage(), x);
-      } catch (ConcurrentRefUpdateException x) {
-        log.error(x.getMessage(), x);
-      } finally {
-        reviewDb.close();
-      }
-
+    } catch (OrmException | IOException | ConcurrentRefUpdateException x) {
+      log.error(x.getMessage(), x);
+      return;
     } finally {
       git.close();
     }
-
   }
 }
