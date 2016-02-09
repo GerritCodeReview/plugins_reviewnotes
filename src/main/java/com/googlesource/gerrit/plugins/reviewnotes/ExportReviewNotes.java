@@ -14,10 +14,17 @@
 
 package com.googlesource.gerrit.plugins.reviewnotes;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import com.google.gerrit.reviewdb.client.Change;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.server.ReviewDb;
 import com.google.gerrit.server.git.GitRepositoryManager;
+import com.google.gerrit.server.git.ScanningChangeCacheImpl;
+import com.google.gerrit.server.notedb.ChangeNotes;
+import com.google.gerrit.server.notedb.NotesMigration;
+import com.google.gerrit.server.project.ProjectCache;
 import com.google.gerrit.sshd.SshCommand;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.SchemaFactory;
@@ -28,12 +35,10 @@ import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.eclipse.jgit.lib.ThreadSafeProgressMonitor;
-import org.eclipse.jgit.util.BlockList;
 import org.kohsuke.args4j.Option;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -52,7 +57,19 @@ public class ExportReviewNotes extends SshCommand {
   @Inject
   private CreateReviewNotes.Factory reviewNotesFactory;
 
-  private Map<Project.NameKey, List<Change>> changes;
+  @Inject
+  private NotesMigration notesMigration;
+
+  @Inject
+  private ChangeNotes.Factory changeNotesFactory;
+
+  @Inject
+  private ProjectCache projectCache;
+
+  @Inject
+  private GitRepositoryManager repoManager;
+
+  private Multimap<Project.NameKey, Change> changes;
   private ThreadSafeProgressMonitor monitor;
 
   @Override
@@ -61,11 +78,9 @@ public class ExportReviewNotes extends SshCommand {
       threads = 1;
     }
 
-    List<Change> allChangeList = allChanges();
+    changes = allChanges();
     monitor = new ThreadSafeProgressMonitor(new TextProgressMonitor(stdout));
-    monitor.beginTask("Scanning changes", allChangeList.size());
-    changes = cluster(allChangeList);
-    allChangeList = null;
+    monitor.beginTask("Scanning changes", allChanges().size());
 
     monitor.startWorkers(threads);
     for (int tid = 0; tid < threads; tid++) {
@@ -75,25 +90,31 @@ public class ExportReviewNotes extends SshCommand {
     monitor.endTask();
   }
 
-  private List<Change> allChanges() {
+  private Multimap<Project.NameKey, Change> allChanges() {
     try (ReviewDb db = database.open()){
-      return db.changes().all().toList();
-    } catch (OrmException e) {
-      stderr.println("Cannot read changes from database " + e.getMessage());
-      return Collections.emptyList();
+      if (notesMigration.readChanges()) {
+        Multimap<Project.NameKey, Change> m = ArrayListMultimap.create();
+        for (Project.NameKey project : projectCache.all()) {
+          try (Repository repo = repoManager.openRepository(project)) {
+            m.putAll(project, ScanningChangeCacheImpl
+                .scanNotedb(changeNotesFactory, repo, db, project));
+          }
+        }
+        return m;
+      }
+
+      return cluster(db.changes().all().toList());
+    } catch (OrmException | IOException e) {
+      stderr.println("Cannot read changes " + e.getMessage());
+      return ImmutableMultimap.of();
     }
   }
 
-  private Map<Project.NameKey, List<Change>> cluster(List<Change> changes) {
-    HashMap<Project.NameKey, List<Change>> m = new HashMap<>();
+  private Multimap<Project.NameKey, Change> cluster(List<Change> changes) {
+    Multimap<Project.NameKey, Change> m = ArrayListMultimap.create();
     for (Change change : changes) {
       if (change.getStatus() == Change.Status.MERGED) {
-        List<Change> l = m.get(change.getProject());
-        if (l == null) {
-          l = new BlockList<>();
-          m.put(change.getProject(), l);
-        }
-        l.add(change);
+        m.put(change.getProject(), change);
       } else {
         monitor.update(1);
       }
@@ -101,8 +122,8 @@ public class ExportReviewNotes extends SshCommand {
     return m;
   }
 
-  private void export(ReviewDb db, Project.NameKey project, List<Change> changes)
-      throws IOException, OrmException {
+  private void export(ReviewDb db, Project.NameKey project,
+      Collection<Change> changes) throws IOException, OrmException {
     try (Repository git = gitManager.openRepository(project)) {
       CreateReviewNotes crn = reviewNotesFactory.create(db, project, git);
       crn.createNotes(changes, monitor);
@@ -114,27 +135,27 @@ public class ExportReviewNotes extends SshCommand {
     }
   }
 
-  private Map.Entry<Project.NameKey, List<Change>> next() {
+  private Map.Entry<Project.NameKey, Collection<Change>> next() {
     synchronized (changes) {
       if (changes.isEmpty()) {
         return null;
       }
 
       final Project.NameKey name = changes.keySet().iterator().next();
-      final List<Change> list = changes.remove(name);
-      return new Map.Entry<Project.NameKey, List<Change>>() {
+      final Collection<Change> collection = changes.removeAll(name);
+      return new Map.Entry<Project.NameKey, Collection<Change>>() {
         @Override
         public Project.NameKey getKey() {
           return name;
         }
 
         @Override
-        public List<Change> getValue() {
-          return list;
+        public Collection<Change> getValue() {
+          return collection;
         }
 
         @Override
-        public List<Change> setValue(List<Change> value) {
+        public List<Change> setValue(Collection<Change> value) {
           throw new UnsupportedOperationException();
         }
       };
@@ -146,7 +167,7 @@ public class ExportReviewNotes extends SshCommand {
     public void run() {
       try (ReviewDb db = database.open()){
         for (;;) {
-          Entry<Project.NameKey, List<Change>> next = next();
+          Entry<Project.NameKey, Collection<Change>> next = next();
           if (next != null) {
             try {
               export(db, next.getKey(), next.getValue());

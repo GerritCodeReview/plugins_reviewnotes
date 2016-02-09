@@ -59,8 +59,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 class CreateReviewNotes {
 
@@ -166,7 +166,7 @@ class CreateReviewNotes {
     }
   }
 
-  void createNotes(List<Change> changes, ProgressMonitor monitor)
+  void createNotes(Collection<Change> changes, ProgressMonitor monitor)
       throws OrmException, IOException {
     try (RevWalk rw = new RevWalk(git)) {
       if (monitor == null) {
