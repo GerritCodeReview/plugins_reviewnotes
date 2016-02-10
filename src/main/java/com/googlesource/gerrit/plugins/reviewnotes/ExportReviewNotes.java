@@ -14,11 +14,14 @@
 
 package com.googlesource.gerrit.plugins.reviewnotes;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.gerrit.reviewdb.client.Change;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.server.ReviewDb;
+import com.google.gerrit.server.ChangeAccess;
 import com.google.gerrit.server.git.GitRepositoryManager;
 import com.google.gerrit.sshd.SshCommand;
 import com.google.gwtorm.server.OrmException;
@@ -33,10 +36,9 @@ import org.eclipse.jgit.lib.ThreadSafeProgressMonitor;
 import org.kohsuke.args4j.Option;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /** Export review notes for all submitted changes in all projects. */
 public class ExportReviewNotes extends SshCommand {
@@ -52,7 +54,10 @@ public class ExportReviewNotes extends SshCommand {
   @Inject
   private CreateReviewNotes.Factory reviewNotesFactory;
 
-  private ListMultimap<Project.NameKey, Change> changes;
+  @Inject
+  private ChangeAccess changeAccess;
+
+  private Multimap<Project.NameKey, Change> changes;
   private ThreadSafeProgressMonitor monitor;
 
   @Override
@@ -61,11 +66,9 @@ public class ExportReviewNotes extends SshCommand {
       threads = 1;
     }
 
-    List<Change> allChangeList = allChanges();
+    changes = allChanges();
     monitor = new ThreadSafeProgressMonitor(new TextProgressMonitor(stdout));
-    monitor.beginTask("Scanning changes", allChangeList.size());
-    changes = cluster(allChangeList);
-    allChangeList = null;
+    monitor.beginTask("Scanning changes", changes.size());
 
     monitor.startWorkers(threads);
     for (int tid = 0; tid < threads; tid++) {
@@ -75,25 +78,24 @@ public class ExportReviewNotes extends SshCommand {
     monitor.endTask();
   }
 
-  private List<Change> allChanges() {
-    try (ReviewDb db = database.open()){
-      return db.changes().all().toList();
-    } catch (OrmException e) {
+  private Multimap<Project.NameKey, Change> allChanges() {
+    try (ReviewDb db = database.open()) {
+      return Multimaps.filterEntries(changeAccess.allByProject(db),
+          new Predicate<Map.Entry<Project.NameKey, Change>>() {
+            @Override
+            public boolean apply(Map.Entry<Project.NameKey, Change> entry) {
+              if (entry.getValue().getStatus() == Change.Status.MERGED) {
+                return true;
+              } else {
+                monitor.update(1);
+                return false;
+              }
+            }
+          });
+    } catch (OrmException | IOException e) {
       stderr.println("Cannot read changes from database " + e.getMessage());
-      return Collections.emptyList();
+      return ImmutableMultimap.of();
     }
-  }
-
-  private ListMultimap<Project.NameKey, Change> cluster(List<Change> changes) {
-    ListMultimap<Project.NameKey, Change> m = ArrayListMultimap.create();
-    for (Change change : changes) {
-      if (change.getStatus() == Change.Status.MERGED) {
-        m.put(change.getProject(), change);
-      } else {
-        monitor.update(1);
-      }
-    }
-    return m;
   }
 
   private void export(ReviewDb db, Project.NameKey project, List<Change> changes)
@@ -116,7 +118,7 @@ public class ExportReviewNotes extends SshCommand {
       }
 
       final Project.NameKey name = changes.keySet().iterator().next();
-      final List<Change> list = changes.removeAll(name);
+      final List<Change> list = new ArrayList<>(changes.removeAll(name));
       return new Map.Entry<Project.NameKey, List<Change>>() {
         @Override
         public Project.NameKey getKey() {
@@ -141,7 +143,7 @@ public class ExportReviewNotes extends SshCommand {
     public void run() {
       try (ReviewDb db = database.open()){
         for (;;) {
-          Entry<Project.NameKey, List<Change>> next = next();
+          Map.Entry<Project.NameKey, List<Change>> next = next();
           if (next != null) {
             try {
               export(db, next.getKey(), next.getValue());
