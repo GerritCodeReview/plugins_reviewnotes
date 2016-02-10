@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5dd9683d_1fb8c33f",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-02-10T09:02:29Z",
+      "side": 1,
+      "message": "Cool, done in \n  https://gerrit-review.googlesource.com/74794",
+      "parentUuid": "3dd5942a_d61024a5",
+      "revId": "01d91c803613005b08e0df5560fc2bc690ffd902",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ddb0f80b_7b001f4e",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
         "patchSetId": 1
