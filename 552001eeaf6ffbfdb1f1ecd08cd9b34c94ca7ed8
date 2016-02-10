@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ddb0f80b_db12933b",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2016-02-10T14:43:44Z",
+      "side": 0,
+      "message": "I strongly suspect that we don\u0027t have any benchmark results to show that BlockList is faster than ArrayList in this particular case. However, if this did turn out to be an issue, you could still convert this method by using Multimaps.newListMultimap with a Supplier that returns a new BlockList.",
+      "revId": "552001eeaf6ffbfdb1f1ecd08cd9b34c94ca7ed8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
