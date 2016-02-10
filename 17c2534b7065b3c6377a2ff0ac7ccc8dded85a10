@@ -1,4 +1,22 @@
 {
   "pushCert": "certificate version 0.1\npusher A0D0EF51 1455112167 +0100\nnonce AO+Zq7hCj+6D/cWXoulXgabLcYhB5uAR4uUb08vNma43wGZCwciwAWMEg8RYvhXaziJd04t13jQc\n\n0000000000000000000000000000000000000000 17c2534b7065b3c6377a2ff0ac7ccc8dded85a10 refs/for/master\n-----BEGIN PGP SIGNATURE-----\nVersion: GnuPG v1\n\niQEcBAABAgAGBQJWuz/nAAoJEFG1/Zeg0O9Rl+cH+QH02SqB7QtOXmUx1Uq9bx91\nHSWWlTCY8dekeGecizGZ3vAwkJHApxt/FCHrQ4mn0+pJdO8Eb54mZuG1kQ/EAlEL\nTjAo+BGHR0CZ+ruTYnT+qTYYAJBni/IxHB/YNvPqUV2FyEJm8HTbNbuxM4GwYs/I\nP1G28jq4AjJHOm7rFibojn9O7iwTtGLB5b1IEZxoAFW2gzwB1VHyRbkajZrhqy9L\nAA+Ixy+vKwrCzQWpXGUU7cP9oEo2b/3b+WvV9pCtfnXkExIKKMSpSjE+Sut1I9JU\nfr7q3ETDeKMvKESpXpz1PigS9LRNV/Fa78QTg5BKMAjdZ1V/G2r4h09dXy/Yft0\u003d\n\u003dEybw\n-----END PGP SIGNATURE-----\n",
-  "comments": []
+  "comments": [
+    {
+      "key": {
+        "uuid": "3dd5942a_7624b0a5",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2016-02-10T14:48:18Z",
+      "side": 1,
+      "message": "I don\u0027t think this behaves how you want:\n\n\"Many of the filtered multimap\u0027s methods, such as {@code size()}, iterate across every key/value mapping in the underlying multimap and determine which satisfy the filter.\"\n\nThis means a) you don\u0027t want to have to filter out all the unmerged changes multiple times, and b) you don\u0027t want the side effect of calling monitor.update(1) to happen multiple times.\n\nAlso, in terms of control flow, it seems unsafe to assign this value to changes() on line 69 while monitor is still null.",
+      "revId": "17c2534b7065b3c6377a2ff0ac7ccc8dded85a10",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
 }
