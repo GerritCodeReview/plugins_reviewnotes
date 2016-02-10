@@ -14,11 +14,13 @@
 
 package com.googlesource.gerrit.plugins.reviewnotes;
 
-import com.google.common.collect.ArrayListMultimap;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.gerrit.reviewdb.client.Change;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.server.ReviewDb;
+import com.google.gerrit.server.ChangeAccess2;
 import com.google.gerrit.server.git.GitRepositoryManager;
 import com.google.gerrit.sshd.SshCommand;
 import com.google.gwtorm.server.OrmException;
@@ -33,10 +35,8 @@ import org.eclipse.jgit.lib.ThreadSafeProgressMonitor;
 import org.kohsuke.args4j.Option;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /** Export review notes for all submitted changes in all projects. */
 public class ExportReviewNotes extends SshCommand {
@@ -52,6 +52,9 @@ public class ExportReviewNotes extends SshCommand {
   @Inject
   private CreateReviewNotes.Factory reviewNotesFactory;
 
+  @Inject
+  private ChangeAccess2 changeAccess;
+
   private ListMultimap<Project.NameKey, Change> changes;
   private ThreadSafeProgressMonitor monitor;
 
@@ -61,12 +64,10 @@ public class ExportReviewNotes extends SshCommand {
       threads = 1;
     }
 
-    List<Change> allChangeList = allChanges();
-    monitor = new ThreadSafeProgressMonitor(new TextProgressMonitor(stdout));
-    monitor.beginTask("Scanning changes", allChangeList.size());
-    changes = cluster(allChangeList);
-    allChangeList = null;
+    changes = mergedChanges();
 
+    monitor = new ThreadSafeProgressMonitor(new TextProgressMonitor(stdout));
+    monitor.beginTask("Scanning merged changes", changes.size());
     monitor.startWorkers(threads);
     for (int tid = 0; tid < threads; tid++) {
       new Worker().start();
@@ -75,25 +76,18 @@ public class ExportReviewNotes extends SshCommand {
     monitor.endTask();
   }
 
-  private List<Change> allChanges() {
-    try (ReviewDb db = database.open()){
-      return db.changes().all().toList();
-    } catch (OrmException e) {
+  private ListMultimap<Project.NameKey, Change> mergedChanges() {
+    try (ReviewDb db = database.open()) {
+      return changeAccess.byProject(db, new Predicate<Change>() {
+        @Override
+        public boolean apply(Change change) {
+          return change.getStatus() == Change.Status.MERGED;
+        }
+      });
+    } catch (OrmException | IOException e) {
       stderr.println("Cannot read changes from database " + e.getMessage());
-      return Collections.emptyList();
+      return ImmutableListMultimap.of();
     }
-  }
-
-  private ListMultimap<Project.NameKey, Change> cluster(List<Change> changes) {
-    ListMultimap<Project.NameKey, Change> m = ArrayListMultimap.create();
-    for (Change change : changes) {
-      if (change.getStatus() == Change.Status.MERGED) {
-        m.put(change.getProject(), change);
-      } else {
-        monitor.update(1);
-      }
-    }
-    return m;
   }
 
   private void export(ReviewDb db, Project.NameKey project, List<Change> changes)
@@ -141,7 +135,7 @@ public class ExportReviewNotes extends SshCommand {
     public void run() {
       try (ReviewDb db = database.open()){
         for (;;) {
-          Entry<Project.NameKey, List<Change>> next = next();
+          Map.Entry<Project.NameKey, List<Change>> next = next();
           if (next != null) {
             try {
               export(db, next.getKey(), next.getValue());
