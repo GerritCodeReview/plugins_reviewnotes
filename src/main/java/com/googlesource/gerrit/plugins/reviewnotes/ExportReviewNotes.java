@@ -22,6 +22,7 @@ import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.server.ReviewDb;
 import com.google.gerrit.server.ChangeAccess2;
 import com.google.gerrit.server.git.GitRepositoryManager;
+import com.google.gerrit.server.notedb.ChangeNotes;
 import com.google.gerrit.sshd.SshCommand;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.SchemaFactory;
@@ -55,7 +56,7 @@ public class ExportReviewNotes extends SshCommand {
   @Inject
   private ChangeAccess2 changeAccess;
 
-  private ListMultimap<Project.NameKey, Change> changes;
+  private ListMultimap<Project.NameKey, ChangeNotes> changes;
   private ThreadSafeProgressMonitor monitor;
 
   @Override
@@ -76,12 +77,12 @@ public class ExportReviewNotes extends SshCommand {
     monitor.endTask();
   }
 
-  private ListMultimap<Project.NameKey, Change> mergedChanges() {
+  private ListMultimap<Project.NameKey, ChangeNotes> mergedChanges() {
     try (ReviewDb db = database.open()) {
-      return changeAccess.byProject(db, new Predicate<Change>() {
+      return changeAccess.byProject(db, new Predicate<ChangeNotes>() {
         @Override
-        public boolean apply(Change change) {
-          return change.getStatus() == Change.Status.MERGED;
+        public boolean apply(ChangeNotes notes) {
+          return notes.getChange().getStatus() == Change.Status.MERGED;
         }
       });
     } catch (OrmException | IOException e) {
@@ -90,11 +91,11 @@ public class ExportReviewNotes extends SshCommand {
     }
   }
 
-  private void export(ReviewDb db, Project.NameKey project, List<Change> changes)
+  private void export(ReviewDb db, Project.NameKey project, List<ChangeNotes> notes)
       throws IOException, OrmException {
     try (Repository git = gitManager.openRepository(project)) {
       CreateReviewNotes crn = reviewNotesFactory.create(db, project, git);
-      crn.createNotes(changes, monitor);
+      crn.createNotes(notes, monitor);
       crn.commitNotes();
     } catch (RepositoryNotFoundException e) {
       stderr.println("Unable to open project: " + project.get());
@@ -103,27 +104,27 @@ public class ExportReviewNotes extends SshCommand {
     }
   }
 
-  private Map.Entry<Project.NameKey, List<Change>> next() {
+  private Map.Entry<Project.NameKey, List<ChangeNotes>> next() {
     synchronized (changes) {
       if (changes.isEmpty()) {
         return null;
       }
 
       final Project.NameKey name = changes.keySet().iterator().next();
-      final List<Change> list = changes.removeAll(name);
-      return new Map.Entry<Project.NameKey, List<Change>>() {
+      final List<ChangeNotes> list = changes.removeAll(name);
+      return new Map.Entry<Project.NameKey, List<ChangeNotes>>() {
         @Override
         public Project.NameKey getKey() {
           return name;
         }
 
         @Override
-        public List<Change> getValue() {
+        public List<ChangeNotes> getValue() {
           return list;
         }
 
         @Override
-        public List<Change> setValue(List<Change> value) {
+        public List<ChangeNotes> setValue(List<ChangeNotes> value) {
           throw new UnsupportedOperationException();
         }
       };
@@ -135,7 +136,7 @@ public class ExportReviewNotes extends SshCommand {
     public void run() {
       try (ReviewDb db = database.open()){
         for (;;) {
-          Map.Entry<Project.NameKey, List<Change>> next = next();
+          Map.Entry<Project.NameKey, List<ChangeNotes>> next = next();
           if (next != null) {
             try {
               export(db, next.getKey(), next.getValue());

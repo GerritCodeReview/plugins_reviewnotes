@@ -156,7 +156,10 @@ class CreateReviewNotes {
       }
 
       for (RevCommit c : rw) {
-        ObjectId content = createNoteContent(loadPatchSet(c, branch));
+        PatchSet ps = loadPatchSet(c, branch);
+        ChangeNotes notes =
+            notesFactory.create(reviewDb, project, ps.getId().getParentKey());
+        ObjectId content = createNoteContent(notes, ps);
         if (content != null) {
           monitor.update(1);
           getNotes().set(c, content);
@@ -166,19 +169,19 @@ class CreateReviewNotes {
     }
   }
 
-  void createNotes(List<Change> changes, ProgressMonitor monitor)
+  void createNotes(List<ChangeNotes> notes, ProgressMonitor monitor)
       throws OrmException, IOException {
     try (RevWalk rw = new RevWalk(git)) {
       if (monitor == null) {
         monitor = NullProgressMonitor.INSTANCE;
       }
 
-      for (Change c : changes) {
+      for (ChangeNotes cn : notes) {
         monitor.update(1);
-        PatchSet ps = reviewDb.patchSets().get(c.currentPatchSetId());
+        PatchSet ps = reviewDb.patchSets().get(cn.getChange().currentPatchSetId());
         ObjectId commitId = ObjectId.fromString(ps.getRevision().get());
         RevCommit commit = rw.parseCommit(commitId);
-        getNotes().set(commitId, createNoteContent(ps));
+        getNotes().set(commitId, createNoteContent(cn, ps));
         getMessage().append("* ").append(commit.getShortMessage()).append("\n");
       }
     }
@@ -225,13 +228,13 @@ class CreateReviewNotes {
     }
   }
 
-  private ObjectId createNoteContent(PatchSet ps)
+  private ObjectId createNoteContent(ChangeNotes notes, PatchSet ps)
       throws OrmException, IOException {
     HeaderFormatter fmt =
         new HeaderFormatter(gerritServerIdent.getTimeZone(), anonymousCowardName);
     if (ps != null) {
       try {
-        createCodeReviewNote(ps, fmt);
+        createCodeReviewNote(notes, ps, fmt);
         return getInserter().insert(Constants.OBJ_BLOB,
             fmt.toString().getBytes("UTF-8"));
       } catch (NoSuchChangeException e) {
@@ -255,15 +258,13 @@ class CreateReviewNotes {
     return null; // TODO: createNoCodeReviewNote(branch, c, fmt);
   }
 
-  private void createCodeReviewNote(PatchSet ps, HeaderFormatter fmt)
-      throws OrmException, NoSuchChangeException {
+  private void createCodeReviewNote(ChangeNotes notes, PatchSet ps,
+      HeaderFormatter fmt) throws OrmException, NoSuchChangeException {
     // This races with the label normalization/writeback done by MergeOp. It may
     // repeat some work, but results should be identical except in the case of
     // an additional race with a permissions change.
     // TODO(dborowitz): These will eventually be stamped in the ChangeNotes at
     // commit time so we will be able to skip this normalization step.
-    ChangeNotes notes =
-        notesFactory.create(reviewDb, project, ps.getId().getParentKey());
     Change change = notes.getChange();
     ChangeControl ctl = changeControlFactory.controlFor(
         notes, userFactory.create(change.getOwner()));
