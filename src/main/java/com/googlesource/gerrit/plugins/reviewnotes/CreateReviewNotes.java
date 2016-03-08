@@ -14,6 +14,7 @@
 
 package com.googlesource.gerrit.plugins.reviewnotes;
 
+import com.google.common.base.Optional;
 import com.google.gerrit.common.Nullable;
 import com.google.gerrit.common.data.LabelType;
 import com.google.gerrit.common.data.LabelTypes;
@@ -23,6 +24,7 @@ import com.google.gerrit.reviewdb.client.PatchSetApproval;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.server.ReviewDb;
 import com.google.gerrit.server.ApprovalsUtil;
+import com.google.gerrit.server.ApprovalsUtil.SubmitInfo;
 import com.google.gerrit.server.GerritPersonIdent;
 import com.google.gerrit.server.IdentifiedUser;
 import com.google.gerrit.server.account.AccountCache;
@@ -269,14 +271,11 @@ class CreateReviewNotes {
     Change change = notes.getChange();
     ChangeControl ctl = changeControlFactory.controlFor(
         notes, userFactory.create(change.getOwner()));
-    PatchSetApproval submit = null;
     for (PatchSetApproval a :
         approvalsUtil.byPatchSet(reviewDb, ctl, ps.getId())) {
       if (a.getValue() == 0) {
         // Ignore 0 values.
-      } else if (a.isLegacySubmit()) {
-        submit = a;
-      } else {
+      } else if (!a.isLegacySubmit()) {
         LabelType type = labelTypes.byLabel(a.getLabelId());
         if (type != null) {
           fmt.appendApproval(type, a.getValue(),
@@ -284,9 +283,11 @@ class CreateReviewNotes {
         }
       }
     }
-    if (submit != null) {
-      fmt.appendSubmittedBy(accountCache.get(submit.getAccountId()).getAccount());
-      fmt.appendSubmittedAt(submit.getGranted());
+    Optional<SubmitInfo> submit = approvalsUtil.getSubmitInfo(reviewDb, notes);
+    if (submit.isPresent()) {
+      fmt.appendSubmittedBy(
+          accountCache.get(submit.get().accountId()).getAccount());
+      fmt.appendSubmittedAt(submit.get().when());
     }
     if (canonicalWebUrl != null) {
       fmt.appendReviewedOn(canonicalWebUrl, ps.getId().getParentKey());
