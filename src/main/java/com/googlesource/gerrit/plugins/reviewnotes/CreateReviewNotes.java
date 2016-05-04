@@ -157,13 +157,15 @@ class CreateReviewNotes {
 
       for (RevCommit c : rw) {
         PatchSet ps = loadPatchSet(c, branch);
-        ChangeNotes notes =
-            notesFactory.create(reviewDb, project, ps.getId().getParentKey());
-        ObjectId content = createNoteContent(notes, ps);
-        if (content != null) {
-          monitor.update(1);
-          getNotes().set(c, content);
-          getMessage().append("* ").append(c.getShortMessage()).append("\n");
+        if (ps != null) {
+          ChangeNotes notes = notesFactory.create(reviewDb, project,
+              ps.getId().getParentKey());
+          ObjectId content = createNoteContent(notes, ps);
+          if (content != null) {
+            monitor.update(1);
+            getNotes().set(c, content);
+            getMessage().append("* ").append(c.getShortMessage()).append("\n");
+          }
         }
       }
     }
