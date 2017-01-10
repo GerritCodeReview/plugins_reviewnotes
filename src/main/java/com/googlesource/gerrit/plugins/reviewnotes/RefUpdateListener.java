@@ -24,7 +24,7 @@ import com.google.gerrit.server.git.WorkQueue;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.SchemaFactory;
 import com.google.inject.Inject;
-
+import java.io.IOException;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
@@ -32,12 +32,9 @@ import org.eclipse.jgit.lib.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 class RefUpdateListener implements GitReferenceUpdatedListener {
 
-  private static final Logger log = LoggerFactory
-      .getLogger(RefUpdateListener.class);
+  private static final Logger log = LoggerFactory.getLogger(RefUpdateListener.class);
 
   private final CreateReviewNotes.Factory reviewNotesFactory;
   private final SchemaFactory<ReviewDb> schema;
@@ -46,9 +43,11 @@ class RefUpdateListener implements GitReferenceUpdatedListener {
   private final boolean async;
 
   @Inject
-  RefUpdateListener(final CreateReviewNotes.Factory reviewNotesFactory,
+  RefUpdateListener(
+      final CreateReviewNotes.Factory reviewNotesFactory,
       final SchemaFactory<ReviewDb> schema,
-      final GitRepositoryManager repoManager, final WorkQueue workQueue,
+      final GitRepositoryManager repoManager,
+      final WorkQueue workQueue,
       @GerritServerConfig final Config config) {
     this.reviewNotesFactory = reviewNotesFactory;
     this.schema = schema;
@@ -59,32 +58,33 @@ class RefUpdateListener implements GitReferenceUpdatedListener {
 
   @Override
   public void onGitReferenceUpdated(final Event e) {
-    Runnable task = new ProjectRunnable() {
-      @Override
-      public void run() {
-        createReviewNotes(e);
-      }
+    Runnable task =
+        new ProjectRunnable() {
+          @Override
+          public void run() {
+            createReviewNotes(e);
+          }
 
-      @Override
-      public Project.NameKey getProjectNameKey() {
-        return new Project.NameKey(e.getProjectName());
-      }
+          @Override
+          public Project.NameKey getProjectNameKey() {
+            return new Project.NameKey(e.getProjectName());
+          }
 
-      @Override
-      public String getRemoteName() {
-        return null;
-      }
+          @Override
+          public String getRemoteName() {
+            return null;
+          }
 
-      @Override
-      public boolean hasCustomizedPrint() {
-        return true;
-      }
+          @Override
+          public boolean hasCustomizedPrint() {
+            return true;
+          }
 
-      @Override
-      public String toString() {
-        return "create-review-notes";
-      }
-    };
+          @Override
+          public String toString() {
+            return "create-review-notes";
+          }
+        };
     if (async) {
       workQueue.getDefaultQueue().submit(task);
     } else {
@@ -96,10 +96,10 @@ class RefUpdateListener implements GitReferenceUpdatedListener {
     Project.NameKey projectName = new Project.NameKey(e.getProjectName());
     try (Repository git = repoManager.openRepository(projectName);
         ReviewDb reviewDb = schema.open()) {
-      CreateReviewNotes crn = reviewNotesFactory.create(
-          reviewDb, projectName, git);
+      CreateReviewNotes crn = reviewNotesFactory.create(reviewDb, projectName, git);
       if (e.getRefName().startsWith("refs/heads/")) {
-        crn.createNotes(e.getRefName(),
+        crn.createNotes(
+            e.getRefName(),
             ObjectId.fromString(e.getOldObjectId()),
             ObjectId.fromString(e.getNewObjectId()),
             null);

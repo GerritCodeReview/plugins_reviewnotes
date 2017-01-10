@@ -22,8 +22,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 public class ReviewNotesModule extends AbstractModule {
   @Override
   protected void configure() {
-    DynamicSet.bind(binder(), GitReferenceUpdatedListener.class)
-        .to(RefUpdateListener.class);
+    DynamicSet.bind(binder(), GitReferenceUpdatedListener.class).to(RefUpdateListener.class);
     install(new FactoryModuleBuilder().build(CreateReviewNotes.Factory.class));
   }
 }

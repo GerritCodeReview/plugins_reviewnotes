@@ -40,7 +40,9 @@ import com.google.gwtorm.server.OrmException;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
-
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
@@ -58,18 +60,12 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
 class CreateReviewNotes {
 
-  private static final Logger log =
-      LoggerFactory.getLogger(CreateReviewNotes.class);
+  private static final Logger log = LoggerFactory.getLogger(CreateReviewNotes.class);
 
   interface Factory {
-    CreateReviewNotes create(ReviewDb reviewDb, Project.NameKey project,
-        Repository git);
+    CreateReviewNotes create(ReviewDb reviewDb, Project.NameKey project, Repository git);
   }
 
   private static final String REFS_NOTES_REVIEW = "refs/notes/review";
@@ -94,7 +90,8 @@ class CreateReviewNotes {
   private StringBuilder message;
 
   @Inject
-  CreateReviewNotes(@GerritPersonIdent PersonIdent gerritIdent,
+  CreateReviewNotes(
+      @GerritPersonIdent PersonIdent gerritIdent,
       AccountCache accountCache,
       @AnonymousCowardName String anonymousCowardName,
       ProjectCache projectCache,
@@ -113,9 +110,11 @@ class CreateReviewNotes {
     this.anonymousCowardName = anonymousCowardName;
     ProjectState projectState = projectCache.get(project);
     if (projectState == null) {
-      log.error("Could not obtain available labels for project "
-          + project.get() + ". Expect missing labels in its review notes.");
-      this.labelTypes = new LabelTypes(Collections.<LabelType> emptyList());
+      log.error(
+          "Could not obtain available labels for project "
+              + project.get()
+              + ". Expect missing labels in its review notes.");
+      this.labelTypes = new LabelTypes(Collections.<LabelType>emptyList());
     } else {
       this.labelTypes = projectState.getLabelTypes();
     }
@@ -131,8 +130,9 @@ class CreateReviewNotes {
     this.git = git;
   }
 
-  void createNotes(String branch, ObjectId oldObjectId, ObjectId newObjectId,
-      ProgressMonitor monitor) throws OrmException, IOException {
+  void createNotes(
+      String branch, ObjectId oldObjectId, ObjectId newObjectId, ProgressMonitor monitor)
+      throws OrmException, IOException {
     if (ObjectId.zeroId().equals(newObjectId)) {
       return;
     }
@@ -158,8 +158,7 @@ class CreateReviewNotes {
       for (RevCommit c : rw) {
         PatchSet ps = loadPatchSet(c, branch);
         if (ps != null) {
-          ChangeNotes notes = notesFactory.create(reviewDb, project,
-              ps.getId().getParentKey());
+          ChangeNotes notes = notesFactory.create(reviewDb, project, ps.getId().getParentKey());
           ObjectId content = createNoteContent(notes, ps);
           if (content != null) {
             monitor.update(1);
@@ -167,8 +166,8 @@ class CreateReviewNotes {
             getMessage().append("* ").append(c.getShortMessage()).append("\n");
           }
         } else {
-          log.debug("no note for this commit since it is a direct push: "
-              + c.getName().substring(0, 7));
+          log.debug(
+              "no note for this commit since it is a direct push: " + c.getName().substring(0, 7));
         }
       }
     }
@@ -183,8 +182,7 @@ class CreateReviewNotes {
 
       for (ChangeNotes cn : notes) {
         monitor.update(1);
-        PatchSet ps =
-            reviewDb.patchSets().get(cn.getChange().currentPatchSetId());
+        PatchSet ps = reviewDb.patchSets().get(cn.getChange().currentPatchSetId());
         ObjectId commitId = ObjectId.fromString(ps.getRevision().get());
         RevCommit commit = rw.parseCommit(commitId);
         getNotes().set(commitId, createNoteContent(cn, ps));
@@ -200,9 +198,9 @@ class CreateReviewNotes {
       }
 
       message.insert(0, "Update notes for submitted changes\n\n");
-      notesBranchUtilFactory.create(project, git, inserter)
-          .commitAllNotes(reviewNotes, REFS_NOTES_REVIEW, gerritServerIdent,
-              message.toString());
+      notesBranchUtilFactory
+          .create(project, git, inserter)
+          .commitAllNotes(reviewNotes, REFS_NOTES_REVIEW, gerritServerIdent, message.toString());
     } finally {
       if (inserter != null) {
         inserter.close();
@@ -210,8 +208,7 @@ class CreateReviewNotes {
     }
   }
 
-  private void markUninteresting(Repository git, String branch, RevWalk rw,
-      ObjectId oldObjectId) {
+  private void markUninteresting(Repository git, String branch, RevWalk rw, ObjectId oldObjectId) {
     for (final Ref r : git.getAllRefs().values()) {
       try {
         if (r.getName().equals(branch)) {
@@ -236,13 +233,11 @@ class CreateReviewNotes {
 
   private ObjectId createNoteContent(ChangeNotes notes, PatchSet ps)
       throws OrmException, IOException {
-    HeaderFormatter fmt =
-        new HeaderFormatter(gerritServerIdent.getTimeZone(), anonymousCowardName);
+    HeaderFormatter fmt = new HeaderFormatter(gerritServerIdent.getTimeZone(), anonymousCowardName);
     if (ps != null) {
       try {
         createCodeReviewNote(notes, ps, fmt);
-        return getInserter().insert(Constants.OBJ_BLOB,
-            fmt.toString().getBytes("UTF-8"));
+        return getInserter().insert(Constants.OBJ_BLOB, fmt.toString().getBytes("UTF-8"));
       } catch (NoSuchChangeException e) {
         throw new IOException(e);
       }
@@ -250,11 +245,9 @@ class CreateReviewNotes {
     return null;
   }
 
-  private PatchSet loadPatchSet(RevCommit c, String destBranch)
-      throws OrmException {
+  private PatchSet loadPatchSet(RevCommit c, String destBranch) throws OrmException {
     String hash = c.name();
-    for (ChangeData cd : queryProvider.get()
-        .byBranchCommit(project.get(), destBranch, hash)) {
+    for (ChangeData cd : queryProvider.get().byBranchCommit(project.get(), destBranch, hash)) {
       for (PatchSet ps : cd.patchSets()) {
         if (ps.getRevision().matches(hash)) {
           return ps;
@@ -264,19 +257,18 @@ class CreateReviewNotes {
     return null; // TODO: createNoCodeReviewNote(branch, c, fmt);
   }
 
-  private void createCodeReviewNote(ChangeNotes notes, PatchSet ps,
-      HeaderFormatter fmt) throws OrmException, NoSuchChangeException {
+  private void createCodeReviewNote(ChangeNotes notes, PatchSet ps, HeaderFormatter fmt)
+      throws OrmException, NoSuchChangeException {
     // This races with the label normalization/writeback done by MergeOp. It may
     // repeat some work, but results should be identical except in the case of
     // an additional race with a permissions change.
     // TODO(dborowitz): These will eventually be stamped in the ChangeNotes at
     // commit time so we will be able to skip this normalization step.
     Change change = notes.getChange();
-    ChangeControl ctl = changeControlFactory.controlFor(
-        notes, userFactory.create(change.getOwner()));
+    ChangeControl ctl =
+        changeControlFactory.controlFor(notes, userFactory.create(change.getOwner()));
     PatchSetApproval submit = null;
-    for (PatchSetApproval a :
-        approvalsUtil.byPatchSet(reviewDb, ctl, ps.getId())) {
+    for (PatchSetApproval a : approvalsUtil.byPatchSet(reviewDb, ctl, ps.getId())) {
       if (a.getValue() == 0) {
         // Ignore 0 values.
       } else if (a.isLegacySubmit()) {
@@ -284,8 +276,7 @@ class CreateReviewNotes {
       } else {
         LabelType type = labelTypes.byLabel(a.getLabelId());
         if (type != null) {
-          fmt.appendApproval(type, a.getValue(),
-              accountCache.get(a.getAccountId()).getAccount());
+          fmt.appendApproval(type, a.getValue(), accountCache.get(a.getAccountId()).getAccount());
         }
       }
     }

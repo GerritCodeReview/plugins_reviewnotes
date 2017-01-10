@@ -26,7 +26,9 @@ import com.google.gerrit.sshd.SshCommand;
 import com.google.gwtorm.server.OrmException;
 import com.google.gwtorm.server.SchemaFactory;
 import com.google.inject.Inject;
-
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.Repository;
@@ -34,26 +36,18 @@ import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.eclipse.jgit.lib.ThreadSafeProgressMonitor;
 import org.kohsuke.args4j.Option;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
 /** Export review notes for all submitted changes in all projects. */
 public class ExportReviewNotes extends SshCommand {
   @Option(name = "--threads", usage = "Number of concurrent threads to run")
   private int threads = 2;
 
-  @Inject
-  private GitRepositoryManager gitManager;
+  @Inject private GitRepositoryManager gitManager;
 
-  @Inject
-  private SchemaFactory<ReviewDb> database;
+  @Inject private SchemaFactory<ReviewDb> database;
 
-  @Inject
-  private CreateReviewNotes.Factory reviewNotesFactory;
+  @Inject private CreateReviewNotes.Factory reviewNotesFactory;
 
-  @Inject
-  private ChangeNotes.Factory notesFactory;
+  @Inject private ChangeNotes.Factory notesFactory;
 
   private ListMultimap<Project.NameKey, ChangeNotes> changes;
   private ThreadSafeProgressMonitor monitor;
@@ -86,8 +80,8 @@ public class ExportReviewNotes extends SshCommand {
     }
   }
 
-  private void export(ReviewDb db, Project.NameKey project,
-      List<ChangeNotes> notes) throws IOException, OrmException {
+  private void export(ReviewDb db, Project.NameKey project, List<ChangeNotes> notes)
+      throws IOException, OrmException {
     try (Repository git = gitManager.openRepository(project)) {
       CreateReviewNotes crn = reviewNotesFactory.create(db, project, git);
       crn.createNotes(notes, monitor);
@@ -114,7 +108,7 @@ public class ExportReviewNotes extends SshCommand {
     @Override
     public void run() {
       try (ReviewDb db = database.open()) {
-        for (;;) {
+        for (; ; ) {
           Map.Entry<Project.NameKey, List<ChangeNotes>> next = next();
           if (next != null) {
             try {
