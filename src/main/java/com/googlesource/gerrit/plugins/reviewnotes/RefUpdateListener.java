@@ -86,7 +86,8 @@ class RefUpdateListener implements GitReferenceUpdatedListener {
       }
     };
     if (async) {
-      workQueue.getDefaultQueue().submit(task);
+      @SuppressWarnings("unused") // No assurance this completes.
+      Future<?> possiblyIgnoredError = workQueue.getDefaultQueue().submit(task);
     } else {
       task.run();
     }
