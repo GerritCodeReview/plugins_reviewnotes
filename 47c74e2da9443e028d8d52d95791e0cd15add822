@@ -1,4 +1,28 @@
 {
   "pushCert": "certificate version 0.1\npusher A0D0EF51 1455532112 +0100\nnonce AO+Zq7j1StR7nDIg0OmnMiJ8zI33YBGetEAgYLJ9JKBkmFv98ZpYHJyFrDpEqY6lJzVRn46g9cb7\n\n0000000000000000000000000000000000000000 47c74e2da9443e028d8d52d95791e0cd15add822 refs/for/master\n-----BEGIN PGP SIGNATURE-----\nVersion: GnuPG v1\n\niQEcBAABAgAGBQJWwahRAAoJEFG1/Zeg0O9Rb+4H/0LqvHzu1jX4K2q98nYqwxqB\nUoJ6EdueZaMSZIp2oUMiLDtjPY3NO0qW5OhA66doToI5anEQF0Fy1Vw0Z2ATOe4M\nUk8XO5+JJO7m0W666e8surr8SR/SQtukg44YUX3RceLh4lDhmFH/x2TdodQqcmLW\nVyylC3kefQHUFqvv5DImhWcU15JPaZfX/8A2modAzs9uLuPB/CFDnAFF/q6fK3qH\n2VLvKopgY9sLU61oAliSnODlxzF2ckr3fs63izjnbUuOiMrTBHrNvitXnly9ZS3c\n3GYGGwGM5LhDKqpkTr9/yuHr1YYBqPdFEFSFBDDNy0ZmnW/XnsC6pd7fpFbbC/Q\u003d\n\u003dCncx\n-----END PGP SIGNATURE-----\n",
-  "comments": []
+  "comments": [
+    {
+      "key": {
+        "uuid": "7822b920_2ba6e85f",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2017-02-27T09:35:55Z",
+      "side": 1,
+      "message": "This doesn\u0027t work; changes is an ImmutableMultimap\n\nSee issue 5652",
+      "range": {
+        "startLine": 113,
+        "startChar": 45,
+        "endLine": 113,
+        "endChar": 54
+      },
+      "revId": "47c74e2da9443e028d8d52d95791e0cd15add822",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
 }
