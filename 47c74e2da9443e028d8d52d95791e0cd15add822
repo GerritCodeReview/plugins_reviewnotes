@@ -23,6 +23,30 @@
       "revId": "47c74e2da9443e028d8d52d95791e0cd15add822",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f15a09b0_203dc21c",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/ExportReviewNotes.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2017-02-27T14:51:52Z",
+      "side": 1,
+      "message": "Fixed in\n  https://gerrit-review.googlesource.com/98622",
+      "parentUuid": "7822b920_2ba6e85f",
+      "range": {
+        "startLine": 113,
+        "startChar": 45,
+        "endLine": 113,
+        "endChar": 54
+      },
+      "revId": "47c74e2da9443e028d8d52d95791e0cd15add822",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
