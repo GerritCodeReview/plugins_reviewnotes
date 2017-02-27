@@ -17,6 +17,7 @@ package com.googlesource.gerrit.plugins.reviewnotes;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.google.common.collect.MultimapBuilder;
 import com.google.gerrit.reviewdb.client.Change;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.server.ReviewDb;
@@ -78,12 +79,13 @@ public class ExportReviewNotes extends SshCommand {
 
   private ListMultimap<Project.NameKey, ChangeNotes> mergedChanges() {
     try (ReviewDb db = database.open()) {
-      return notesFactory.create(db, new Predicate<ChangeNotes>() {
-        @Override
-        public boolean apply(ChangeNotes notes) {
-          return notes.getChange().getStatus() == Change.Status.MERGED;
-        }
-      });
+      return MultimapBuilder.hashKeys().arrayListValues()
+          .build(notesFactory.create(db, new Predicate<ChangeNotes>() {
+            @Override
+            public boolean apply(ChangeNotes notes) {
+              return notes.getChange().getStatus() == Change.Status.MERGED;
+            }
+          }));
     } catch (OrmException | IOException e) {
       stderr.println("Cannot read changes from database " + e.getMessage());
       return ImmutableListMultimap.of();
