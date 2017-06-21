@@ -26,7 +26,6 @@ import com.google.gwtorm.server.SchemaFactory;
 import com.google.inject.Inject;
 import java.io.IOException;
 import java.util.concurrent.Future;
-import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
@@ -107,7 +106,7 @@ class RefUpdateListener implements GitReferenceUpdatedListener {
             null);
         crn.commitNotes();
       }
-    } catch (OrmException | IOException | ConcurrentRefUpdateException x) {
+    } catch (OrmException | IOException x) {
       log.error(x.getMessage(), x);
     }
   }

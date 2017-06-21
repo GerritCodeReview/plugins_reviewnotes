@@ -43,7 +43,6 @@ import com.google.inject.assistedinject.Assisted;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
@@ -191,7 +190,7 @@ class CreateReviewNotes {
     }
   }
 
-  void commitNotes() throws IOException, ConcurrentRefUpdateException {
+  void commitNotes() throws IOException {
     try {
       if (reviewNotes == null) {
         return;

@@ -30,7 +30,6 @@ import com.google.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.TextProgressMonitor;
@@ -92,8 +91,6 @@ public class ExportReviewNotes extends SshCommand {
       crn.commitNotes();
     } catch (RepositoryNotFoundException e) {
       stderr.println("Unable to open project: " + project.get());
-    } catch (ConcurrentRefUpdateException e) {
-      stderr.println(e.getMessage());
     }
   }
 
