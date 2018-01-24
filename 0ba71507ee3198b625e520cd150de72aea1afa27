@@ -1,4 +1,22 @@
 {
   "pushCert": "certificate version 0.1\npusher A0D0EF51 1516801778 +0100\nnonce AGjzz3+58ZuBRgexpFf1WDpxyeC5t+KZ4Jkj4AA5jKHG0Gxrf/QQ1rqW0/VboGQcU3EXcDALnXFI\n\n0000000000000000000000000000000000000000 0ba71507ee3198b625e520cd150de72aea1afa27 refs/for/master\n-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCAAdFiEEjcOJ9ZBmQPrFqZA3UbX9l6DQ71EFAlpojvIACgkQUbX9l6DQ\n71HsxAf+J56v4lMwySRxKontxd3b9tpgXZEMveMql3YegE9QBRnxXifbwD/KIJuy\nsuRY5RCwbPR4PwhwXAR0+K+XI8qfrTW/GxEr10STTbCqvcOfPku1gWrjpU0sLkcD\ndrm5oeVPe78iFXbJZxcRTwYTofFTFK6fbyHHhB4xZdYcMfalv8U21fwJEQzAuFlB\nnSblnkhn5G/h6+VW6/52vgVGIfvliTpKVcq4gNTWQ+W906dngrWpUaYlPU6A4Do7\nGxXtJ37r0KnoIdbE3dfwJktdBuzL+N7wQofHeFqhFGtSrI1gLA7WpL2mVXYyZmkr\nHmZx56kH2T4h+sEQsPRmiAjlPshGYw\u003d\u003d\n\u003d0A+C\n-----END PGP SIGNATURE-----\n",
-  "comments": []
+  "comments": [
+    {
+      "key": {
+        "uuid": "0cc0f59b_4c65fb08",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2018-01-24T15:38:39Z",
+      "side": 1,
+      "message": "Not convinced here. Would it not be better to omit approvals by deleted/missing accounts?",
+      "revId": "0ba71507ee3198b625e520cd150de72aea1afa27",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
 }
