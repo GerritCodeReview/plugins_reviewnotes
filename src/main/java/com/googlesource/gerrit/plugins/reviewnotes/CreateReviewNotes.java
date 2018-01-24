@@ -272,12 +272,13 @@ class CreateReviewNotes {
       } else {
         LabelType type = labelTypes.byLabel(a.getLabelId());
         if (type != null) {
-          fmt.appendApproval(type, a.getValue(), accountCache.get(a.getAccountId()).getAccount());
+          fmt.appendApproval(
+              type, a.getValue(), accountCache.getEvenIfMissing(a.getAccountId()).getAccount());
         }
       }
     }
     if (submit != null) {
-      fmt.appendSubmittedBy(accountCache.get(submit.getAccountId()).getAccount());
+      fmt.appendSubmittedBy(accountCache.getEvenIfMissing(submit.getAccountId()).getAccount());
       fmt.appendSubmittedAt(submit.getGranted());
     }
     if (canonicalWebUrl != null) {
