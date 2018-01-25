@@ -17,6 +17,24 @@
       "revId": "0ba71507ee3198b625e520cd150de72aea1afa27",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d1cd47f_bfafadac",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2018-01-25T03:55:38Z",
+      "side": 1,
+      "message": "That would be a change of behaviour though.\n\nIIUC this change is only necessary because the core method name changed.  Changing the behaviour should then be deferred to a follow-up change.",
+      "parentUuid": "0cc0f59b_4c65fb08",
+      "revId": "0ba71507ee3198b625e520cd150de72aea1afa27",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }
