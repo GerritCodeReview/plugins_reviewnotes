@@ -35,6 +35,24 @@
       "revId": "0ba71507ee3198b625e520cd150de72aea1afa27",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d402d715_91e5db48",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2018-01-26T09:58:28Z",
+      "side": 1,
+      "message": "Hmm, I\u0027m not sure about this. If there was an approval that was taken into account on submit we should record it here, even if the account doesn\u0027t exist (anymore).\nLooking at the review notes it\u0027s better to see that a change was approved by a missing account (which at least has an account ID), rather than having the approval missing completely. If we skip approvals for missing accounts it may happen that the review notes don\u0027t contain any approval at all and then as a reader I would be quite confused asking myself how it could happen that a change was submitted without any approval. Having an approval by an account that was deleted in the meantime looks less scary.",
+      "parentUuid": "9d1cd47f_bfafadac",
+      "revId": "0ba71507ee3198b625e520cd150de72aea1afa27",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }
