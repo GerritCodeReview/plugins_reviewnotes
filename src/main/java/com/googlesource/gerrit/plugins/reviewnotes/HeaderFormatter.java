@@ -14,6 +14,9 @@
 
 package com.googlesource.gerrit.plugins.reviewnotes;
 
+import static com.google.common.base.Preconditions.checkState;
+
+import com.google.gerrit.common.Nullable;
 import com.google.gerrit.common.data.LabelType;
 import com.google.gerrit.common.data.LabelValue;
 import com.google.gerrit.reviewdb.client.Account;
@@ -48,34 +51,53 @@ class HeaderFormatter {
     sb.append("Change-Id: ").append(changeKey.get()).append("\n");
   }
 
-  void appendApproval(LabelType label, short value, Account user) {
+  /**
+   * Appends a header for an approval.
+   *
+   * @param label the label on which the approval was done
+   * @param value the voting value
+   * @param accountId the account ID of the approver
+   * @param account the account of the approver, can be {@code null} if the account is missing
+   */
+  void appendApproval(
+      LabelType label, short value, Account.Id accountId, @Nullable Account account) {
     sb.append(label.getName());
     sb.append(LabelValue.formatValue(value));
     sb.append(": ");
-    appendUserData(user);
+    appendUserData(accountId, account);
     sb.append("\n");
   }
 
-  private void appendUserData(Account user) {
+  /**
+   * Appends user data.
+   *
+   * @param accountId the ID of the account
+   * @param account the account, can be {@code null} if the account is missing
+   */
+  private void appendUserData(Account.Id accountId, @Nullable Account account) {
+    checkState(account == null || accountId.equals(account.getId()), "mismatching account IDs");
+
     boolean needSpace = false;
     boolean wroteData = false;
 
-    if (user.getFullName() != null && !user.getFullName().isEmpty()) {
-      sb.append(user.getFullName());
-      needSpace = true;
-      wroteData = true;
-    }
-
-    if (user.getPreferredEmail() != null && !user.getPreferredEmail().isEmpty()) {
-      if (needSpace) {
-        sb.append(" ");
+    if (account != null) {
+      if (account.getFullName() != null && !account.getFullName().isEmpty()) {
+        sb.append(account.getFullName());
+        needSpace = true;
+        wroteData = true;
       }
-      sb.append("<").append(user.getPreferredEmail()).append(">");
-      wroteData = true;
+
+      if (account.getPreferredEmail() != null && !account.getPreferredEmail().isEmpty()) {
+        if (needSpace) {
+          sb.append(" ");
+        }
+        sb.append("<").append(account.getPreferredEmail()).append(">");
+        wroteData = true;
+      }
     }
 
     if (!wroteData) {
-      sb.append(anonymousCowardName).append(" #").append(user.getId());
+      sb.append(anonymousCowardName).append(" #").append(accountId);
     }
   }
 
@@ -87,9 +109,15 @@ class HeaderFormatter {
     sb.append("Branch: ").append(branch).append("\n");
   }
 
-  void appendSubmittedBy(Account user) {
+  /**
+   * Appends a header with the submitter information.
+   *
+   * @param accountId the account ID of the submitter
+   * @param account the account of the submitter, can be {@code null} if the account is missing
+   */
+  void appendSubmittedBy(Account.Id accountId, @Nullable Account account) {
     sb.append("Submitted-by: ");
-    appendUserData(user);
+    appendUserData(accountId, account);
     sb.append("\n");
   }
 

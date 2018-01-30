@@ -26,6 +26,7 @@ import com.google.gerrit.server.ApprovalsUtil;
 import com.google.gerrit.server.GerritPersonIdent;
 import com.google.gerrit.server.IdentifiedUser;
 import com.google.gerrit.server.account.AccountCache;
+import com.google.gerrit.server.account.AccountState;
 import com.google.gerrit.server.config.AnonymousCowardName;
 import com.google.gerrit.server.config.CanonicalWebUrl;
 import com.google.gerrit.server.git.LockFailureException;
@@ -272,12 +273,18 @@ class CreateReviewNotes {
       } else {
         LabelType type = labelTypes.byLabel(a.getLabelId());
         if (type != null) {
-          fmt.appendApproval(type, a.getValue(), accountCache.get(a.getAccountId()).getAccount());
+          fmt.appendApproval(
+              type,
+              a.getValue(),
+              a.getAccountId(),
+              accountCache.maybeGet(a.getAccountId()).map(AccountState::getAccount).orElse(null));
         }
       }
     }
     if (submit != null) {
-      fmt.appendSubmittedBy(accountCache.get(submit.getAccountId()).getAccount());
+      fmt.appendSubmittedBy(
+          submit.getAccountId(),
+          accountCache.maybeGet(submit.getAccountId()).map(AccountState::getAccount).orElse(null));
       fmt.appendSubmittedAt(submit.getGranted());
     }
     if (canonicalWebUrl != null) {
