@@ -53,6 +53,24 @@
       "revId": "0ba71507ee3198b625e520cd150de72aea1afa27",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10014968_74ac8280",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2018-01-30T15:08:20Z",
+      "side": 1,
+      "message": "Done in https://gerrit-review.googlesource.com/c/plugins/reviewnotes/+/155732",
+      "parentUuid": "d402d715_91e5db48",
+      "revId": "0ba71507ee3198b625e520cd150de72aea1afa27",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }
