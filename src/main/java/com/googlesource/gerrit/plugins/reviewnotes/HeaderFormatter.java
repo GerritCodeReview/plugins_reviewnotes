@@ -16,6 +16,7 @@ package com.googlesource.gerrit.plugins.reviewnotes;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import com.google.common.base.Strings;
 import com.google.gerrit.common.Nullable;
 import com.google.gerrit.common.data.LabelType;
 import com.google.gerrit.common.data.LabelValue;
@@ -81,13 +82,13 @@ class HeaderFormatter {
     boolean wroteData = false;
 
     if (account != null) {
-      if (account.getFullName() != null && !account.getFullName().isEmpty()) {
+      if (!Strings.isNullOrEmpty(account.getFullName())) {
         sb.append(account.getFullName());
         needSpace = true;
         wroteData = true;
       }
 
-      if (account.getPreferredEmail() != null && !account.getPreferredEmail().isEmpty()) {
+      if (!Strings.isNullOrEmpty(account.getPreferredEmail())) {
         if (needSpace) {
           sb.append(" ");
         }
