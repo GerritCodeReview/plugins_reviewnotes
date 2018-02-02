@@ -1,4 +1,22 @@
 {
   "pushCert": "certificate version 0.1\npusher A0D0EF51 1517316656 +0100\nnonce AGjzz3/3nPOMwxOcbZBR6Nt70KB2FU/jd6wMe+14tQrmnfkN/SISV+e4CDTHISBUuuqUTxZ7mD+g\n\n0000000000000000000000000000000000000000 43ac8e422c250ad0ddf989f18c8afff59bc9e2b0 refs/for/master\n-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCAAdFiEEjcOJ9ZBmQPrFqZA3UbX9l6DQ71EFAlpwajAACgkQUbX9l6DQ\n71Fe6Af+NGM52rjLlMrwdmqT/xtTDwdL+6WOlx/SJc9A5fknm9QpsKMXFm916unI\ns+iYpPS3EdzIIifkv59IJA0DDrUoP1J38fGMdoT1xIJuuXdltdMOFOqm0Z8a4h17\n67//9+jsJ8D6/DyIGwOb10uA1NEPPn3/MBn1gXtopjo0Qm9VikEyRwZcagsSkaCH\ng9f0YoHMu9QGZqQqlc7FK5P6bE8vKLdyhZR9/BN+eMIdcul0gHFuD5rzQ1Sqk72i\nYEuR4RXSUEnYWz4WuHD7BVSAyTDJ2W1agU3qXrpcwgbR2+l2tOytlkvIgxAChrLE\nEFcFG4FAS1CgokFikQYCLN/R7dyeSA\u003d\u003d\n\u003dXin3\n-----END PGP SIGNATURE-----\n",
-  "comments": []
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9dac02d_061d467f",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/HeaderFormatter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2018-02-02T14:56:09Z",
+      "side": 1,
+      "message": "Why don\u0027t these take Optional\u003cAccount\u003e, since that\u0027s what the callers have? Or are there some callers other than the ones you modified in this change which don\u0027t have an Optional already?",
+      "revId": "43ac8e422c250ad0ddf989f18c8afff59bc9e2b0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
 }
