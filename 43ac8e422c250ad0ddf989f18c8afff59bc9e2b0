@@ -17,6 +17,24 @@
       "revId": "43ac8e422c250ad0ddf989f18c8afff59bc9e2b0",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49b49525_c1d58381",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/HeaderFormatter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2018-02-02T15:53:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9dac02d_061d467f",
+      "revId": "43ac8e422c250ad0ddf989f18c8afff59bc9e2b0",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
