@@ -14,11 +14,11 @@
 
 package com.googlesource.gerrit.plugins.reviewnotes;
 
+import com.google.gerrit.config.GerritServerConfig;
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
 import com.google.gerrit.extensions.restapi.RestApiException;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.server.ReviewDb;
-import com.google.gerrit.server.config.GerritServerConfig;
 import com.google.gerrit.server.git.GitRepositoryManager;
 import com.google.gerrit.server.git.ProjectRunnable;
 import com.google.gerrit.server.git.WorkQueue;
