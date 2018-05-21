@@ -111,9 +111,8 @@ class CreateReviewNotes {
     ProjectState projectState = projectCache.get(project);
     if (projectState == null) {
       log.error(
-          "Could not obtain available labels for project "
-              + project.get()
-              + ". Expect missing labels in its review notes.");
+          "Could not obtain available labels for project {}. Expect missing labels in its review notes.",
+          project.get());
       this.labelTypes = new LabelTypes(Collections.<LabelType>emptyList());
     } else {
       this.labelTypes = projectState.getLabelTypes();
@@ -166,8 +165,11 @@ class CreateReviewNotes {
             getMessage().append("* ").append(c.getShortMessage()).append("\n");
           }
         } else {
-          log.debug(
-              "no note for this commit since it is a direct push: " + c.getName().substring(0, 7));
+          if (log.isDebugEnabled()) {
+            log.debug(
+                "no note for this commit since it is a direct push {}",
+                c.getName().substring(0, 7));
+          }
         }
       }
     }
