@@ -34,6 +34,24 @@
       "revId": "52b36a15981618ac28f09fc30d59f5bb16d2ebea",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a43f5b3c_5d6287ce",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2018-05-22T15:14:50Z",
+      "side": 1,
+      "message": "I think inline would still be nicer.",
+      "parentUuid": "71f35fc9_b54707d0",
+      "revId": "52b36a15981618ac28f09fc30d59f5bb16d2ebea",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }
