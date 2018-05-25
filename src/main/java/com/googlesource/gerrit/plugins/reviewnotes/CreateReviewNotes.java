@@ -23,7 +23,7 @@ import com.google.gerrit.reviewdb.client.PatchSetApproval;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.server.ReviewDb;
 import com.google.gerrit.server.ApprovalsUtil;
-import com.google.gerrit.server.GerritPersonIdent;
+import com.google.gerrit.server.GerritPersonIdentFactory;
 import com.google.gerrit.server.IdentifiedUser;
 import com.google.gerrit.server.account.AccountCache;
 import com.google.gerrit.server.account.AccountState;
@@ -90,7 +90,7 @@ class CreateReviewNotes {
 
   @Inject
   CreateReviewNotes(
-      @GerritPersonIdent PersonIdent gerritIdent,
+      GerritPersonIdentFactory identFactory,
       AccountCache accountCache,
       @AnonymousCowardName String anonymousCowardName,
       ProjectCache projectCache,
@@ -103,7 +103,7 @@ class CreateReviewNotes {
       @Assisted ReviewDb reviewDb,
       @Assisted Project.NameKey project,
       @Assisted Repository git) {
-    this.gerritServerIdent = gerritIdent;
+    this.gerritServerIdent = identFactory.createAtCurrentTime();
     this.accountCache = accountCache;
     this.anonymousCowardName = anonymousCowardName;
     ProjectState projectState = projectCache.get(project);
