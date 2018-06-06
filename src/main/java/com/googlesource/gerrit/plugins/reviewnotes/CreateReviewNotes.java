@@ -14,6 +14,7 @@
 
 package com.googlesource.gerrit.plugins.reviewnotes;
 
+import com.google.common.flogger.FluentLogger;
 import com.google.gerrit.common.Nullable;
 import com.google.gerrit.common.data.LabelType;
 import com.google.gerrit.common.data.LabelTypes;
@@ -57,12 +58,9 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.notes.NoteMap;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class CreateReviewNotes {
-
-  private static final Logger log = LoggerFactory.getLogger(CreateReviewNotes.class);
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   interface Factory {
     CreateReviewNotes create(ReviewDb reviewDb, Project.NameKey project, Repository git);
@@ -108,10 +106,12 @@ class CreateReviewNotes {
     this.anonymousCowardName = anonymousCowardName;
     ProjectState projectState = projectCache.get(project);
     if (projectState == null) {
-      log.error(
-          "Could not obtain available labels for project {}."
-              + " Expect missing labels in its review notes.",
-          project.get());
+      logger
+          .atSevere()
+          .log(
+              "Could not obtain available labels for project %s."
+                  + " Expect missing labels in its review notes.",
+              project.get());
       this.labelTypes = new LabelTypes(Collections.<LabelType>emptyList());
     } else {
       this.labelTypes = projectState.getLabelTypes();
@@ -144,7 +144,7 @@ class CreateReviewNotes {
           markUninteresting(git, branch, rw, oldObjectId);
         }
       } catch (Exception e) {
-        log.error(e.getMessage(), e);
+        logger.atSevere().withCause(e).log(e.getMessage());
         return;
       }
 
@@ -163,11 +163,11 @@ class CreateReviewNotes {
             getMessage().append("* ").append(c.getShortMessage()).append("\n");
           }
         } else {
-          if (log.isDebugEnabled()) {
-            log.debug(
-                "no note for this commit since it is a direct push {}",
-                c.getName().substring(0, 7));
-          }
+          logger
+              .atFine()
+              .log(
+                  "no note for this commit since it is a direct push %s",
+                  c.getName().substring(0, 7));
         }
       }
     }

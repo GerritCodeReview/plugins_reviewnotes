@@ -14,6 +14,7 @@
 
 package com.googlesource.gerrit.plugins.reviewnotes;
 
+import com.google.common.flogger.FluentLogger;
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
 import com.google.gerrit.extensions.restapi.RestApiException;
 import com.google.gerrit.reviewdb.client.Project;
@@ -30,12 +31,9 @@ import java.util.concurrent.Future;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class RefUpdateListener implements GitReferenceUpdatedListener {
-
-  private static final Logger log = LoggerFactory.getLogger(RefUpdateListener.class);
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   private final CreateReviewNotes.Factory reviewNotesFactory;
   private final SchemaFactory<ReviewDb> schema;
@@ -117,7 +115,7 @@ class RefUpdateListener implements GitReferenceUpdatedListener {
             return null;
           });
     } catch (RestApiException | UpdateException x) {
-      log.error(x.getMessage(), x);
+      logger.atSevere().withCause(x).log(x.getMessage());
     }
   }
 }
