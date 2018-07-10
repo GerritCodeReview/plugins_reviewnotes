@@ -25,7 +25,6 @@ import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.server.ReviewDb;
 import com.google.gerrit.server.ApprovalsUtil;
 import com.google.gerrit.server.GerritPersonIdent;
-import com.google.gerrit.server.IdentifiedUser;
 import com.google.gerrit.server.account.AccountCache;
 import com.google.gerrit.server.account.AccountState;
 import com.google.gerrit.server.config.AnonymousCowardName;
@@ -74,7 +73,6 @@ class CreateReviewNotes {
   private final LabelTypes labelTypes;
   private final ApprovalsUtil approvalsUtil;
   private final ChangeNotes.Factory notesFactory;
-  private final IdentifiedUser.GenericFactory userFactory;
   private final NotesBranchUtil.Factory notesBranchUtilFactory;
   private final Provider<InternalChangeQuery> queryProvider;
   private final String canonicalWebUrl;
@@ -94,7 +92,6 @@ class CreateReviewNotes {
       ProjectCache projectCache,
       ApprovalsUtil approvalsUtil,
       ChangeNotes.Factory notesFactory,
-      IdentifiedUser.GenericFactory userFactory,
       NotesBranchUtil.Factory notesBranchUtilFactory,
       Provider<InternalChangeQuery> queryProvider,
       @Nullable @CanonicalWebUrl String canonicalWebUrl,
@@ -116,7 +113,6 @@ class CreateReviewNotes {
     }
     this.approvalsUtil = approvalsUtil;
     this.notesFactory = notesFactory;
-    this.userFactory = userFactory;
     this.notesBranchUtilFactory = notesBranchUtilFactory;
     this.queryProvider = queryProvider;
     this.canonicalWebUrl = canonicalWebUrl;
@@ -261,9 +257,7 @@ class CreateReviewNotes {
     // commit time so we will be able to skip this normalization step.
     Change change = notes.getChange();
     PatchSetApproval submit = null;
-    for (PatchSetApproval a :
-        approvalsUtil.byPatchSet(
-            reviewDb, notes, userFactory.create(change.getOwner()), ps.getId(), null, null)) {
+    for (PatchSetApproval a : approvalsUtil.byPatchSet(reviewDb, notes, ps.getId(), null, null)) {
       if (a.getValue() == 0) {
         // Ignore 0 values.
       } else if (a.isLegacySubmit()) {
