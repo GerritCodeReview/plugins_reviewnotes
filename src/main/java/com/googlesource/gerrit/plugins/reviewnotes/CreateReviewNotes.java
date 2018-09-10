@@ -15,7 +15,6 @@
 package com.googlesource.gerrit.plugins.reviewnotes;
 
 import com.google.common.flogger.FluentLogger;
-import com.google.gerrit.common.Nullable;
 import com.google.gerrit.common.data.LabelType;
 import com.google.gerrit.common.data.LabelTypes;
 import com.google.gerrit.reviewdb.client.Change;
@@ -28,7 +27,7 @@ import com.google.gerrit.server.GerritPersonIdent;
 import com.google.gerrit.server.account.AccountCache;
 import com.google.gerrit.server.account.AccountState;
 import com.google.gerrit.server.config.AnonymousCowardName;
-import com.google.gerrit.server.config.CanonicalWebUrl;
+import com.google.gerrit.server.config.BrowseUrls;
 import com.google.gerrit.server.git.LockFailureException;
 import com.google.gerrit.server.git.NotesBranchUtil;
 import com.google.gerrit.server.notedb.ChangeNotes;
@@ -75,7 +74,7 @@ class CreateReviewNotes {
   private final ChangeNotes.Factory notesFactory;
   private final NotesBranchUtil.Factory notesBranchUtilFactory;
   private final Provider<InternalChangeQuery> queryProvider;
-  private final String canonicalWebUrl;
+  private final BrowseUrls browseUrls;
   private final ReviewDb reviewDb;
   private final Project.NameKey project;
   private final Repository git;
@@ -94,7 +93,7 @@ class CreateReviewNotes {
       ChangeNotes.Factory notesFactory,
       NotesBranchUtil.Factory notesBranchUtilFactory,
       Provider<InternalChangeQuery> queryProvider,
-      @Nullable @CanonicalWebUrl String canonicalWebUrl,
+      BrowseUrls browseUrls,
       @Assisted ReviewDb reviewDb,
       @Assisted Project.NameKey project,
       @Assisted Repository git) {
@@ -115,7 +114,7 @@ class CreateReviewNotes {
     this.notesFactory = notesFactory;
     this.notesBranchUtilFactory = notesBranchUtilFactory;
     this.queryProvider = queryProvider;
-    this.canonicalWebUrl = canonicalWebUrl;
+    this.browseUrls = browseUrls;
     this.reviewDb = reviewDb;
     this.project = project;
     this.git = git;
@@ -279,8 +278,9 @@ class CreateReviewNotes {
           accountCache.get(submit.getAccountId()).map(AccountState::getAccount));
       fmt.appendSubmittedAt(submit.getGranted());
     }
-    if (canonicalWebUrl != null) {
-      fmt.appendReviewedOn(canonicalWebUrl, ps.getId().getParentKey());
+
+    if (browseUrls.webUrl().isPresent()) {
+      fmt.appendReviewedOn(browseUrls, notes.getChange().getProject(), ps.getId().getParentKey());
     }
     fmt.appendProject(project.get());
     fmt.appendBranch(change.getDest().get());
