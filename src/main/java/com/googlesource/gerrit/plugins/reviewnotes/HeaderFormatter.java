@@ -21,6 +21,8 @@ import com.google.gerrit.common.data.LabelType;
 import com.google.gerrit.common.data.LabelValue;
 import com.google.gerrit.reviewdb.client.Account;
 import com.google.gerrit.reviewdb.client.Change;
+import com.google.gerrit.reviewdb.client.Project;
+import com.google.gerrit.server.config.UrlFormatter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -127,8 +129,10 @@ class HeaderFormatter {
     sb.append("Submitted-at: ").append(rfc2822DateFormatter.format(date)).append("\n");
   }
 
-  void appendReviewedOn(String canonicalWebUrl, Change.Id changeId) {
-    sb.append("Reviewed-on: ").append(canonicalWebUrl).append(changeId.get()).append("\n");
+  void appendReviewedOn(UrlFormatter urlFormatter, Project.NameKey project, Change.Id changeId) {
+    sb.append("Reviewed-on: ")
+        .append(urlFormatter.getChangeViewUrl(project, changeId).get())
+        .append("\n");
   }
 
   @Override
