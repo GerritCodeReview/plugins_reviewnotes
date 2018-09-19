@@ -27,7 +27,7 @@ import com.google.gerrit.server.GerritPersonIdent;
 import com.google.gerrit.server.account.AccountCache;
 import com.google.gerrit.server.account.AccountState;
 import com.google.gerrit.server.config.AnonymousCowardName;
-import com.google.gerrit.server.config.BrowseUrls;
+import com.google.gerrit.server.config.UrlFormatter;
 import com.google.gerrit.server.git.LockFailureException;
 import com.google.gerrit.server.git.NotesBranchUtil;
 import com.google.gerrit.server.notedb.ChangeNotes;
@@ -74,7 +74,7 @@ class CreateReviewNotes {
   private final ChangeNotes.Factory notesFactory;
   private final NotesBranchUtil.Factory notesBranchUtilFactory;
   private final Provider<InternalChangeQuery> queryProvider;
-  private final BrowseUrls browseUrls;
+  private final UrlFormatter urlFormatter;
   private final ReviewDb reviewDb;
   private final Project.NameKey project;
   private final Repository git;
@@ -93,7 +93,7 @@ class CreateReviewNotes {
       ChangeNotes.Factory notesFactory,
       NotesBranchUtil.Factory notesBranchUtilFactory,
       Provider<InternalChangeQuery> queryProvider,
-      BrowseUrls browseUrls,
+      UrlFormatter urlFormatter,
       @Assisted ReviewDb reviewDb,
       @Assisted Project.NameKey project,
       @Assisted Repository git) {
@@ -114,7 +114,7 @@ class CreateReviewNotes {
     this.notesFactory = notesFactory;
     this.notesBranchUtilFactory = notesBranchUtilFactory;
     this.queryProvider = queryProvider;
-    this.browseUrls = browseUrls;
+    this.urlFormatter = urlFormatter;
     this.reviewDb = reviewDb;
     this.project = project;
     this.git = git;
@@ -279,8 +279,8 @@ class CreateReviewNotes {
       fmt.appendSubmittedAt(submit.getGranted());
     }
 
-    if (browseUrls.webUrl().isPresent()) {
-      fmt.appendReviewedOn(browseUrls, notes.getChange().getProject(), ps.getId().getParentKey());
+    if (urlFormatter.getWebUrl().isPresent()) {
+      fmt.appendReviewedOn(urlFormatter, notes.getChange().getProject(), ps.getId().getParentKey());
     }
     fmt.appendProject(project.get());
     fmt.appendBranch(change.getDest().get());
