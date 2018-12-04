@@ -17,6 +17,7 @@ package com.googlesource.gerrit.plugins.reviewnotes;
 import com.google.common.flogger.FluentLogger;
 import com.google.gerrit.common.data.LabelType;
 import com.google.gerrit.common.data.LabelTypes;
+import com.google.gerrit.extensions.registration.DynamicItem;
 import com.google.gerrit.reviewdb.client.Change;
 import com.google.gerrit.reviewdb.client.PatchSet;
 import com.google.gerrit.reviewdb.client.PatchSetApproval;
@@ -74,7 +75,7 @@ class CreateReviewNotes {
   private final ChangeNotes.Factory notesFactory;
   private final NotesBranchUtil.Factory notesBranchUtilFactory;
   private final Provider<InternalChangeQuery> queryProvider;
-  private final UrlFormatter urlFormatter;
+  private final DynamicItem<UrlFormatter> urlFormatterItem;
   private final ReviewDb reviewDb;
   private final Project.NameKey project;
   private final Repository git;
@@ -93,7 +94,7 @@ class CreateReviewNotes {
       ChangeNotes.Factory notesFactory,
       NotesBranchUtil.Factory notesBranchUtilFactory,
       Provider<InternalChangeQuery> queryProvider,
-      UrlFormatter urlFormatter,
+      DynamicItem<UrlFormatter> urlFormatter,
       @Assisted ReviewDb reviewDb,
       @Assisted Project.NameKey project,
       @Assisted Repository git) {
@@ -114,7 +115,7 @@ class CreateReviewNotes {
     this.notesFactory = notesFactory;
     this.notesBranchUtilFactory = notesBranchUtilFactory;
     this.queryProvider = queryProvider;
-    this.urlFormatter = urlFormatter;
+    this.urlFormatterItem = urlFormatter;
     this.reviewDb = reviewDb;
     this.project = project;
     this.git = git;
@@ -280,7 +281,8 @@ class CreateReviewNotes {
       fmt.appendSubmittedAt(submit.getGranted());
     }
 
-    if (urlFormatter.getWebUrl().isPresent()) {
+    UrlFormatter urlFormatter = urlFormatterItem.get();
+    if (urlFormatter != null && urlFormatter.getWebUrl().isPresent()) {
       fmt.appendReviewedOn(urlFormatter, notes.getChange().getProject(), ps.getId().getParentKey());
     }
     fmt.appendProject(project.get());
