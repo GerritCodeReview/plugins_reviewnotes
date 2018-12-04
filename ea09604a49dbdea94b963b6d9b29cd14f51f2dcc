@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e8dbbc68_101ec614",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1006192
+      },
+      "writtenOn": "2018-12-04T10:35:24Z",
+      "side": 1,
+      "message": "Yes, it isn\u0027t a UrlFormatter but the dynamic item pointing to it, which can change at any time. Would you prefer to name it urlFormatterDynamicItem?",
+      "parentUuid": "dfb64875_84aeacf0",
+      "revId": "ea09604a49dbdea94b963b6d9b29cd14f51f2dcc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "afcc3ba2_21b1c22c",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "ea09604a49dbdea94b963b6d9b29cd14f51f2dcc",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1a417f6_6de36cec",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1006192
+      },
+      "writtenOn": "2018-12-04T10:35:24Z",
+      "side": 1,
+      "message": "Yes, DynamicItem.get() can return null so it is best to check for it to prevent future NPEs.",
+      "parentUuid": "afcc3ba2_21b1c22c",
+      "revId": "ea09604a49dbdea94b963b6d9b29cd14f51f2dcc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
