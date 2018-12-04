@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "de2b3863_336ed1b2",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2018-12-04T10:38:25Z",
+      "side": 1,
+      "message": "I would just leave it as it is.  We don\u0027t add \"Item\" suffix on other instances of DynamicItem\u003cX\u003e.",
+      "parentUuid": "e8dbbc68_101ec614",
+      "revId": "ea09604a49dbdea94b963b6d9b29cd14f51f2dcc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "afcc3ba2_21b1c22c",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
         "patchSetId": 1
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Yes, DynamicItem.get() can return null so it is best to check for it to prevent future NPEs.",
       "parentUuid": "afcc3ba2_21b1c22c",
+      "revId": "ea09604a49dbdea94b963b6d9b29cd14f51f2dcc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90d90583_88c71226",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2018-12-04T10:38:25Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e1a417f6_6de36cec",
       "revId": "ea09604a49dbdea94b963b6d9b29cd14f51f2dcc",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
