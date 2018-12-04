@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "cbe0d2bf_c4eb6ee2",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1006192
+      },
+      "writtenOn": "2018-12-04T10:40:12Z",
+      "side": 1,
+      "message": "Let me change it back to be consistent with the rest of the code then.",
+      "parentUuid": "de2b3863_336ed1b2",
+      "revId": "ea09604a49dbdea94b963b6d9b29cd14f51f2dcc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "afcc3ba2_21b1c22c",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
         "patchSetId": 1
