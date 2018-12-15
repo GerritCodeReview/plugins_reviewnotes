@@ -25,6 +25,7 @@ import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.server.ReviewDb;
 import com.google.gerrit.server.ApprovalsUtil;
 import com.google.gerrit.server.GerritPersonIdent;
+import com.google.gerrit.server.PatchSetUtil;
 import com.google.gerrit.server.account.AccountCache;
 import com.google.gerrit.server.account.AccountState;
 import com.google.gerrit.server.config.AnonymousCowardName;
@@ -76,6 +77,7 @@ class CreateReviewNotes {
   private final Provider<InternalChangeQuery> queryProvider;
   private final UrlFormatter urlFormatter;
   private final ReviewDb reviewDb;
+  private final PatchSetUtil psUtil;
   private final Project.NameKey project;
   private final Repository git;
 
@@ -94,6 +96,7 @@ class CreateReviewNotes {
       NotesBranchUtil.Factory notesBranchUtilFactory,
       Provider<InternalChangeQuery> queryProvider,
       UrlFormatter urlFormatter,
+      PatchSetUtil psUtil,
       @Assisted ReviewDb reviewDb,
       @Assisted Project.NameKey project,
       @Assisted Repository git) {
@@ -115,6 +118,7 @@ class CreateReviewNotes {
     this.notesBranchUtilFactory = notesBranchUtilFactory;
     this.queryProvider = queryProvider;
     this.urlFormatter = urlFormatter;
+    this.psUtil = psUtil;
     this.reviewDb = reviewDb;
     this.project = project;
     this.git = git;
@@ -172,7 +176,7 @@ class CreateReviewNotes {
 
       for (ChangeNotes cn : notes) {
         monitor.update(1);
-        PatchSet ps = reviewDb.patchSets().get(cn.getChange().currentPatchSetId());
+        PatchSet ps = psUtil.current(reviewDb, cn);
         ObjectId commitId = ObjectId.fromString(ps.getRevision().get());
         RevCommit commit = rw.parseCommit(commitId);
         getNotes().set(commitId, createNoteContent(cn, ps));
