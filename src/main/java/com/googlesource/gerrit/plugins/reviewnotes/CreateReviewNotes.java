@@ -172,7 +172,7 @@ class CreateReviewNotes {
       for (ChangeNotes cn : notes) {
         monitor.update(1);
         PatchSet ps = psUtil.current(cn);
-        ObjectId commitId = ObjectId.fromString(ps.getRevision().get());
+        ObjectId commitId = ObjectId.fromString(ps.getCommitId().get());
         RevCommit commit = rw.parseCommit(commitId);
         getNotes().set(commitId, createNoteContent(cn, ps));
         getMessage().append("* ").append(commit.getShortMessage()).append("\n");
@@ -238,7 +238,7 @@ class CreateReviewNotes {
     String hash = c.name();
     for (ChangeData cd : queryProvider.get().byBranchCommit(project.get(), destBranch, hash)) {
       for (PatchSet ps : cd.patchSets()) {
-        if (ps.getRevision().matches(hash)) {
+        if (ps.getCommitId().matches(hash)) {
           return ps;
         }
       }
