@@ -19,6 +19,7 @@ import com.google.gerrit.common.data.LabelType;
 import com.google.gerrit.common.data.LabelTypes;
 import com.google.gerrit.extensions.registration.DynamicItem;
 import com.google.gerrit.git.LockFailureException;
+import com.google.gerrit.git.ObjectIds;
 import com.google.gerrit.reviewdb.client.Change;
 import com.google.gerrit.reviewdb.client.PatchSet;
 import com.google.gerrit.reviewdb.client.PatchSetApproval;
@@ -172,9 +173,8 @@ class CreateReviewNotes {
       for (ChangeNotes cn : notes) {
         monitor.update(1);
         PatchSet ps = psUtil.current(cn);
-        ObjectId commitId = ObjectId.fromString(ps.getCommitId().get());
-        RevCommit commit = rw.parseCommit(commitId);
-        getNotes().set(commitId, createNoteContent(cn, ps));
+        RevCommit commit = rw.parseCommit(ps.getCommitId());
+        getNotes().set(commit, createNoteContent(cn, ps));
         getMessage().append("* ").append(commit.getShortMessage()).append("\n");
       }
     }
@@ -238,7 +238,7 @@ class CreateReviewNotes {
     String hash = c.name();
     for (ChangeData cd : queryProvider.get().byBranchCommit(project.get(), destBranch, hash)) {
       for (PatchSet ps : cd.patchSets()) {
-        if (ps.getCommitId().matches(hash)) {
+        if (ObjectIds.matchesAbbreviation(ps.getCommitId(), hash)) {
           return ps;
         }
       }
