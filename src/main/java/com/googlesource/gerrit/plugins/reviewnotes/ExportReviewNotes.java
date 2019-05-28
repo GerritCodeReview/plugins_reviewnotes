@@ -26,6 +26,7 @@ import com.google.gerrit.server.git.GitRepositoryManager;
 import com.google.gerrit.server.notedb.ChangeNotes;
 import com.google.gerrit.server.update.RetryHelper;
 import com.google.gerrit.server.update.UpdateException;
+import com.google.gerrit.sshd.CommandMetaData;
 import com.google.gerrit.sshd.SshCommand;
 import com.google.inject.Inject;
 import java.io.IOException;
@@ -38,6 +39,9 @@ import org.eclipse.jgit.lib.ThreadSafeProgressMonitor;
 import org.kohsuke.args4j.Option;
 
 /** Export review notes for all submitted changes in all projects. */
+@CommandMetaData(
+    name = "export",
+    description = "Export review notes for all submitted changes in all projects")
 public class ExportReviewNotes extends SshCommand {
   @Option(name = "--threads", usage = "Number of concurrent threads to run")
   private int threads = 2;
