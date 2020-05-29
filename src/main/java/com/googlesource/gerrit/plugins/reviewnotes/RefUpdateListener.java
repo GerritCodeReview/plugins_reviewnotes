@@ -60,7 +60,10 @@ class RefUpdateListener implements GitReferenceUpdatedListener {
         new ProjectRunnable() {
           @Override
           public void run() {
+            String oldThreadName = Thread.currentThread().getName();
+            Thread.currentThread().setName(oldThreadName + "[reviewnotes-for-" + e.getProjectName() + "]");
             createReviewNotes(e);
+            Thread.currentThread().setName(oldThreadName);
           }
 
           @Override
