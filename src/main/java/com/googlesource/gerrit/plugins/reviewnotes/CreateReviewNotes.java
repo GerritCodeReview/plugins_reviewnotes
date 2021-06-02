@@ -258,7 +258,7 @@ class CreateReviewNotes {
     // commit time so we will be able to skip this normalization step.
     Change change = notes.getChange();
     PatchSetApproval submit = null;
-    for (PatchSetApproval a : approvalsUtil.byPatchSet(notes, ps.id(), null, null)) {
+    for (PatchSetApproval a : approvalsUtil.byPatchSet(notes, ps.id())) {
       if (a.value() == 0) {
         // Ignore 0 values.
       } else if (a.isLegacySubmit()) {
