@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "490d509c_479f2521",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002666
+      },
+      "writtenOn": "2021-06-02T19:24:27Z",
+      "side": 1,
+      "message": "Zuul will pass if you put \"Depends-On: https://gerrit-review.googlesource.com/c/gerrit/+/308250\" in the commit message footers.",
+      "revId": "5ff78329409f0ee8ad9502ab6bbd7882e6be1b74",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}
