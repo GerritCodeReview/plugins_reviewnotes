@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d628797_45f3488b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1143293
+      },
+      "writtenOn": "2021-12-02T08:19:51Z",
+      "side": 1,
+      "message": "\u003e Patch Set 1: Verified+1\n\u003e \n\u003e Builds locally.\n\n",
+      "revId": "9bd38ec6ab9653d17a6b6293dd7163cd60dd736e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}
