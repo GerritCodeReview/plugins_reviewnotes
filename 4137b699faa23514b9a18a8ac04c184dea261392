@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2149c09_3c3fe06a",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/HeaderFormatter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2021-12-27T16:45:26Z",
+      "side": 1,
+      "message": "Nit: this not needed, like it was in the base version?",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 9
+      },
+      "revId": "4137b699faa23514b9a18a8ac04c184dea261392",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}
