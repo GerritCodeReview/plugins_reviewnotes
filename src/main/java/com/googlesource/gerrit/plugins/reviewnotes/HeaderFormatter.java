@@ -23,10 +23,8 @@ import com.google.gerrit.entities.LabelType;
 import com.google.gerrit.entities.LabelValue;
 import com.google.gerrit.entities.Project;
 import com.google.gerrit.server.config.UrlFormatter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.TimeZone;
@@ -40,13 +38,15 @@ import java.util.TimeZone;
  */
 class HeaderFormatter {
 
-  private final DateFormat rfc2822DateFormatter;
+  private final DateTimeFormatter rfc2822DateFormatter;
   private final String anonymousCowardName;
   private final StringBuilder sb = new StringBuilder();
 
   HeaderFormatter(TimeZone tz, String anonymousCowardName) {
-    rfc2822DateFormatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US);
-    rfc2822DateFormatter.setCalendar(Calendar.getInstance(tz, Locale.US));
+    this.rfc2822DateFormatter =
+        DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z")
+            .withLocale(Locale.US)
+            .withZone(tz.toZoneId());
     this.anonymousCowardName = anonymousCowardName;
   }
 
@@ -125,7 +125,7 @@ class HeaderFormatter {
     sb.append("\n");
   }
 
-  void appendSubmittedAt(Date date) {
+  void appendSubmittedAt(Instant date) {
     sb.append("Submitted-at: ").append(rfc2822DateFormatter.format(date)).append("\n");
   }
 
