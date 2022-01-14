@@ -14,7 +14,7 @@
 
 package com.googlesource.gerrit.plugins.reviewnotes;
 
-import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
+import com.google.gerrit.extensions.events.GitReferencesUpdatedListener;
 import com.google.gerrit.extensions.registration.DynamicSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -22,7 +22,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 public class ReviewNotesModule extends AbstractModule {
   @Override
   protected void configure() {
-    DynamicSet.bind(binder(), GitReferenceUpdatedListener.class).to(RefUpdateListener.class);
+    DynamicSet.bind(binder(), GitReferencesUpdatedListener.class).to(RefUpdateListener.class);
     install(new FactoryModuleBuilder().build(CreateReviewNotes.Factory.class));
   }
 }
