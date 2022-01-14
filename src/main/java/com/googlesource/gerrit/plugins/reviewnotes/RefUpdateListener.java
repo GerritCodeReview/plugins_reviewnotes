@@ -17,7 +17,7 @@ package com.googlesource.gerrit.plugins.reviewnotes;
 import com.google.common.flogger.FluentLogger;
 import com.google.gerrit.entities.Project;
 import com.google.gerrit.entities.RefNames;
-import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
+import com.google.gerrit.extensions.events.GitReferencesUpdatedListener;
 import com.google.gerrit.extensions.restapi.RestApiException;
 import com.google.gerrit.server.config.GerritServerConfig;
 import com.google.gerrit.server.git.GitRepositoryManager;
@@ -31,7 +31,7 @@ import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 
-class RefUpdateListener implements GitReferenceUpdatedListener {
+class RefUpdateListener implements GitReferencesUpdatedListener {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   private final CreateReviewNotes.Factory reviewNotesFactory;
@@ -55,7 +55,7 @@ class RefUpdateListener implements GitReferenceUpdatedListener {
   }
 
   @Override
-  public void onGitReferenceUpdated(Event e) {
+  public void onGitReferencesUpdated(Event e) {
     Runnable task =
         new ProjectRunnable() {
           @Override
@@ -92,7 +92,10 @@ class RefUpdateListener implements GitReferenceUpdatedListener {
   }
 
   private void createReviewNotes(Event e) {
-    if (!e.getRefName().startsWith(RefNames.REFS_HEADS)) {
+    UpdatedRef updatedRef = e.getUpdatedRefs().get(0);
+    // Updates of refs/heads/* are not updated using a BatchRefUpdate. Thus, only a single ref update
+    // per event is expected.
+    if (e.getUpdatedRefs().size() > 1 || !updatedRef.getRefName().startsWith(RefNames.REFS_HEADS)) {
       return;
     }
     try {
@@ -104,9 +107,9 @@ class RefUpdateListener implements GitReferenceUpdatedListener {
                 try (Repository git = repoManager.openRepository(projectName)) {
                   CreateReviewNotes crn = reviewNotesFactory.create(projectName, git);
                   crn.createNotes(
-                      e.getRefName(),
-                      ObjectId.fromString(e.getOldObjectId()),
-                      ObjectId.fromString(e.getNewObjectId()),
+                      updatedRef.getRefName(),
+                      ObjectId.fromString(updatedRef.getOldObjectId()),
+                      ObjectId.fromString(updatedRef.getNewObjectId()),
                       null);
                   crn.commitNotes();
                 }
