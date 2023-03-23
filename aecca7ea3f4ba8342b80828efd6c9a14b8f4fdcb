@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0e2fdd5_9c9e5ae5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1016342
+      },
+      "writtenOn": "2023-03-23T13:35:11Z",
+      "side": 1,
+      "message": "Our validation team wants to have a quick overview of the number of comments to have more trust that the reviews are performed correctly.\nI\u0027d like to add that to our review notes so that I can easily generate a review protocol by running `git log --notes\u003dreview`.",
+      "revId": "aecca7ea3f4ba8342b80828efd6c9a14b8f4fdcb",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1754a5ba_8bcbfffd",
