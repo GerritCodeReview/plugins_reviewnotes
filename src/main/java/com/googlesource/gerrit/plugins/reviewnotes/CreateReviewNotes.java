@@ -75,6 +75,7 @@ class CreateReviewNotes {
   private final String anonymousCowardName;
   private final LabelTypes labelTypes;
   private final ApprovalsUtil approvalsUtil;
+  private final ChangeData.Factory changeDataFactory;
   private final ChangeNotes.Factory notesFactory;
   private final NotesBranchUtil.Factory notesBranchUtilFactory;
   private final Provider<InternalChangeQuery> queryProvider;
@@ -94,6 +95,7 @@ class CreateReviewNotes {
       @AnonymousCowardName String anonymousCowardName,
       ProjectCache projectCache,
       ApprovalsUtil approvalsUtil,
+      ChangeData.Factory changeDataFactory,
       ChangeNotes.Factory notesFactory,
       NotesBranchUtil.Factory notesBranchUtilFactory,
       Provider<InternalChangeQuery> queryProvider,
@@ -115,6 +117,7 @@ class CreateReviewNotes {
       this.labelTypes = projectState.get().getLabelTypes();
     }
     this.approvalsUtil = approvalsUtil;
+    this.changeDataFactory = changeDataFactory;
     this.notesFactory = notesFactory;
     this.notesBranchUtilFactory = notesBranchUtilFactory;
     this.queryProvider = queryProvider;
@@ -284,6 +287,10 @@ class CreateReviewNotes {
     if (uf != null && uf.getWebUrl().isPresent()) {
       fmt.appendReviewedOn(uf, notes.getChange().getProject(), ps.id().changeId());
     }
+
+    ChangeData cd = changeDataFactory.create(notes);
+    fmt.appendCommentCount(cd.totalCommentCount(), cd.unresolvedCommentCount());
+
     fmt.appendProject(project.get());
     fmt.appendBranch(change.getDest().branch());
   }

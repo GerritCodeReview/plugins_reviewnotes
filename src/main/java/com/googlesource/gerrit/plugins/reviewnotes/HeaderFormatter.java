@@ -135,6 +135,19 @@ class HeaderFormatter {
         .append("\n");
   }
 
+  void appendCommentCount(int nTotal, int nUnresolved) {
+    if (nTotal > 0) {
+      sb.append("Comments-Total: ")
+          .append(nTotal)
+          .append("\n");
+    }
+    if (nUnresolved > 0) {
+      sb.append("Comments-Unresolved: ")
+          .append(nUnresolved)
+          .append("\n");
+    }
+  }
+
   @Override
   public String toString() {
     return sb.toString();
