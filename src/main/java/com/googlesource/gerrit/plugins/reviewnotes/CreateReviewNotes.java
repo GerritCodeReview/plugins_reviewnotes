@@ -32,6 +32,7 @@ import com.google.gerrit.server.account.AccountCache;
 import com.google.gerrit.server.account.AccountState;
 import com.google.gerrit.server.approval.ApprovalsUtil;
 import com.google.gerrit.server.config.AnonymousCowardName;
+import com.google.gerrit.server.config.GerritServerConfig;
 import com.google.gerrit.server.config.UrlFormatter;
 import com.google.gerrit.server.git.NotesBranchUtil;
 import com.google.gerrit.server.notedb.ChangeNotes;
@@ -49,6 +50,7 @@ import java.util.List;
 import java.util.Optional;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
+import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.NullProgressMonitor;
 import org.eclipse.jgit.lib.ObjectId;
@@ -75,6 +77,7 @@ class CreateReviewNotes {
   private final String anonymousCowardName;
   private final LabelTypes labelTypes;
   private final ApprovalsUtil approvalsUtil;
+  private final ChangeData.Factory changeDataFactory;
   private final ChangeNotes.Factory notesFactory;
   private final NotesBranchUtil.Factory notesBranchUtilFactory;
   private final Provider<InternalChangeQuery> queryProvider;
@@ -82,6 +85,7 @@ class CreateReviewNotes {
   private final PatchSetUtil psUtil;
   private final Project.NameKey project;
   private final Repository git;
+  private final boolean countComments;
 
   private ObjectInserter inserter;
   private NoteMap reviewNotes;
@@ -90,10 +94,12 @@ class CreateReviewNotes {
   @Inject
   CreateReviewNotes(
       @GerritPersonIdent PersonIdent gerritIdent,
+      @GerritServerConfig Config config,
       AccountCache accountCache,
       @AnonymousCowardName String anonymousCowardName,
       ProjectCache projectCache,
       ApprovalsUtil approvalsUtil,
+      ChangeData.Factory changeDataFactory,
       ChangeNotes.Factory notesFactory,
       NotesBranchUtil.Factory notesBranchUtilFactory,
       Provider<InternalChangeQuery> queryProvider,
@@ -115,6 +121,7 @@ class CreateReviewNotes {
       this.labelTypes = projectState.get().getLabelTypes();
     }
     this.approvalsUtil = approvalsUtil;
+    this.changeDataFactory = changeDataFactory;
     this.notesFactory = notesFactory;
     this.notesBranchUtilFactory = notesBranchUtilFactory;
     this.queryProvider = queryProvider;
@@ -122,6 +129,7 @@ class CreateReviewNotes {
     this.psUtil = psUtil;
     this.project = project;
     this.git = git;
+    this.countComments = config.getBoolean("reviewnotes", null, "countComments", false);
   }
 
   void createNotes(
@@ -283,6 +291,10 @@ class CreateReviewNotes {
     UrlFormatter uf = urlFormatter.get();
     if (uf != null && uf.getWebUrl().isPresent()) {
       fmt.appendReviewedOn(uf, notes.getChange().getProject(), ps.id().changeId());
+    }
+    if (countComments) {
+      ChangeData cd = changeDataFactory.create(notes);
+      fmt.appendComments(cd.totalCommentCount(), cd.unresolvedCommentCount());
     }
     fmt.appendProject(project.get());
     fmt.appendBranch(change.getDest().branch());
