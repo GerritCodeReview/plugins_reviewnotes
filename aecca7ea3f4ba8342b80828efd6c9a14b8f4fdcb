@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1754a5ba_8bcbfffd",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/reviewnotes/CreateReviewNotes.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1016342
+      },
+      "writtenOn": "2023-03-23T13:23:21Z",
+      "side": 1,
+      "message": "do we need such a configuration option, or is the comment count interesting enough that we add it unconditionally?",
+      "range": {
+        "startLine": 132,
+        "startChar": 25,
+        "endLine": 132,
+        "endChar": 88
+      },
+      "revId": "aecca7ea3f4ba8342b80828efd6c9a14b8f4fdcb",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}
