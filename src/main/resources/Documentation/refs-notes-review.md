@@ -79,6 +79,20 @@ configured in Gerrit can be included.
 All review labels and scores present on the change at the time of submit are
 included.
 
+### Comments
+
+The number of comments at the time when the change was submitted.
+
+```
+  Comments-Total: 5
+  Comments-Unresolved: 1
+```
+
+Comments-Total is the total number of comments in all threads (also including robot comments),
+Comments-Unresolved is the number of comment threads which are still unresolved.
+
+These lines are only added when there are comments.
+
 ### Project
 
 The name of the project in which the commit was made.
