@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1020cdc0_6207e42d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2023-03-23T07:41:00Z",
+      "side": 1,
+      "message": "We don\u0027t want to remove the owner access right for the maintainers.",
+      "revId": "0c0eb2f016fc57f0870e972c7986eff4d6c1e420",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}
