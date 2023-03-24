@@ -22,6 +22,30 @@
       },
       "revId": "cae69ed3d19fac773192b38566f847205d0eb1ac",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6972b65a_e446f595",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1016342
+      },
+      "writtenOn": "2023-03-24T13:01:47Z",
+      "side": 1,
+      "message": "Ups, fixed.",
+      "parentUuid": "000815db_a40c2571",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 7
+      },
+      "revId": "cae69ed3d19fac773192b38566f847205d0eb1ac",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }
