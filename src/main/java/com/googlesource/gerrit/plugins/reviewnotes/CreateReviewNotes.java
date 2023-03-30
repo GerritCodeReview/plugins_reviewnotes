@@ -292,7 +292,7 @@ class CreateReviewNotes {
     }
 
     ChangeData cd = changeDataFactory.create(notes);
-    fmt.appendCommentCount(cd.totalCommentCount(), cd.unresolvedCommentCount());
+    fmt.appendCommentCount(cd.resolvedCommentCount(), cd.unresolvedCommentCount());
 
     fmt.appendProject(project.get());
     fmt.appendBranch(change.getDest().branch());
