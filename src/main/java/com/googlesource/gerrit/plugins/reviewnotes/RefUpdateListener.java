@@ -98,23 +98,25 @@ class RefUpdateListener implements GitReferenceUpdatedListener {
       return;
     }
     try {
-      retryHelper
-          .changeUpdate(
-              "createReviewNotes",
-              updateFactory -> {
-                Project.NameKey projectName = Project.nameKey(e.getProjectName());
-                try (Repository git = repoManager.openRepository(projectName)) {
-                  CreateReviewNotes crn = reviewNotesFactory.create(projectName, git);
-                  crn.createNotes(
-                      e.getRefName(),
-                      ObjectId.fromString(e.getOldObjectId()),
-                      ObjectId.fromString(e.getNewObjectId()),
-                      null);
-                  crn.commitNotes();
-                }
-                return null;
-              })
-          .call();
+      @SuppressWarnings("unused")
+      var unused =
+          retryHelper
+              .changeUpdate(
+                  "createReviewNotes",
+                  updateFactory -> {
+                    Project.NameKey projectName = Project.nameKey(e.getProjectName());
+                    try (Repository git = repoManager.openRepository(projectName)) {
+                      CreateReviewNotes crn = reviewNotesFactory.create(projectName, git);
+                      crn.createNotes(
+                          e.getRefName(),
+                          ObjectId.fromString(e.getOldObjectId()),
+                          ObjectId.fromString(e.getNewObjectId()),
+                          null);
+                      crn.commitNotes();
+                    }
+                    return null;
+                  })
+              .call();
     } catch (RestApiException | UpdateException x) {
       logger.atSevere().withCause(x).log("%s", x.getMessage());
     }
